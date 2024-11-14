@@ -47,6 +47,9 @@
       font-size: 0.9em;
       display: none;
     }
+    .additional-fields {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -54,7 +57,7 @@
     <h3 class="text-center mb-4">Media Information</h3>
     <form id="mediaForm">
       <div class="mb-3">
-        <label for="mediaType" class="form-label">Media Title</label>
+        <label for="mediaType" class="form-label">Media Type</label>
         <select name="mediaType" id="mediaType" class="form-select">
           <option value="1">Mall</option>
           <option value="2">Theatre</option>
@@ -101,86 +104,84 @@
           <div class="error-message" id="slotsError">Please enter a positive number.</div>
         </div>
       </div>
+
+      <!-- Additional Fields for Fuel Station -->
+      <div class="additional-fields">
+        <div class="mb-3">
+          <label for="mediaLocationType" class="form-label">Media Location Type</label>
+          <input type="text" class="form-control" id="mediaLocationType" name="mediaLocationType" placeholder="Enter location type">
+          <div class="error-message" id="locationTypeError">Please enter a valid location type.</div>
+        </div>
+        <div class="mb-3">
+          <label for="mediaSize" class="form-label">Media Size</label>
+          <input type="text" class="form-control" id="mediaSize" name="mediaSize" placeholder="Enter media size">
+          <div class="error-message" id="sizeError">Please enter a valid size.</div>
+        </div>
+        <div class="mb-3">
+          <label for="mediaLoopTime" class="form-label">Media Loop Time</label>
+          <input type="number" class="form-control" id="mediaLoopTime" name="mediaLoopTime" placeholder="Enter loop time in seconds">
+          <div class="error-message" id="loopTimeError">Please enter a valid loop time.</div>
+        </div>
+        <input type="hidden" name="formName" id="formName" value="add_new_media">
+      </div>
+
       <button type="submit" class="btn btn-primary w-100" id="submitForm">Submit Media Information</button>
     </form>
   </div>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
+    // Show or hide additional fields based on media type selection
+    $('#mediaType').change(function() {
+      if ($(this).val() == '3') { // Show additional fields for Fuel Station
+        $('.additional-fields').show();
+      } else {
+        $('.additional-fields').hide();
+      }
+    });
+
     $('#submitForm').click(function(e) {
       e.preventDefault();
-      
+
       // Input values
-      let mediaTitle = $('#mediaTitle').val();
-      let mediaImage = $('#mediaImage').val();
-      let mediaDescription = $('#mediaDescription').val();
-      let mediaFootfalls = $('#mediaFootfalls').val();
-      let mediaDuration = $('#mediaDuration').val();
-      let mediaScreens = $('#mediaScreens').val();
-      let mediaSlots = $('#mediaSlots').val();
+      let formData = new FormData($('#mediaForm')[0]);
 
       // Validation flags
       let isValid = true;
 
-      // Validate Media Title
-      if(mediaTitle === '') {
-        $('#titleError').show();
-        isValid = false;
-      } else {
-        $('#titleError').hide();
+      // Validate all fields as before
+      if($('#mediaTitle').val() === '') { $('#titleError').show(); isValid = false; } else { $('#titleError').hide(); }
+      if($('#mediaImage').val() === '') { $('#imageError').show(); isValid = false; } else { $('#imageError').hide(); }
+      if($('#mediaDescription').val() === '') { $('#descriptionError').show(); isValid = false; } else { $('#descriptionError').hide(); }
+      if($('#mediaFootfalls').val() === '' || $('#mediaFootfalls').val() <= 0) { $('#footfallsError').show(); isValid = false; } else { $('#footfallsError').hide(); }
+      if($('#mediaDuration').val() === '' || $('#mediaDuration').val() <= 0) { $('#durationError').show(); isValid = false; } else { $('#durationError').hide(); }
+      if($('#mediaScreens').val() === '' || $('#mediaScreens').val() <= 0) { $('#screensError').show(); isValid = false; } else { $('#screensError').hide(); }
+      if($('#mediaSlots').val() === '' || $('#mediaSlots').val() <= 0) { $('#slotsError').show(); isValid = false; } else { $('#slotsError').hide(); }
+
+      
+      if ($('#mediaType').val() == '3') {
+        if($('#mediaLocationType').val() === '') { $('#locationTypeError').show(); isValid = false; } else { $('#locationTypeError').hide(); }
+        if($('#mediaSize').val() === '') { $('#sizeError').show(); isValid = false; } else { $('#sizeError').hide(); }
+        if($('#mediaLoopTime').val() === '' || $('#mediaLoopTime').val() <= 0) { $('#loopTimeError').show(); isValid = false; } else { $('#loopTimeError').hide(); }
       }
 
-      // Validate Media Image
-      if(mediaImage === '') {
-        $('#imageError').show();
-        isValid = false;
-      } else {
-        $('#imageError').hide();
-      }
-
-      // Validate Media Description
-      if(mediaDescription === '') {
-        $('#descriptionError').show();
-        isValid = false;
-      } else {
-        $('#descriptionError').hide();
-      }
-
-      // Validate Footfalls (should be a positive number)
-      if(mediaFootfalls === '' || mediaFootfalls <= 0) {
-        $('#footfallsError').show();
-        isValid = false;
-      } else {
-        $('#footfallsError').hide();
-      }
-
-      // Validate Duration (should be a positive number)
-      if(mediaDuration === '' || mediaDuration <= 0) {
-        $('#durationError').show();
-        isValid = false;
-      } else {
-        $('#durationError').hide();
-      }
-
-      // Validate Screens (should be a positive number)
-      if(mediaScreens === '' || mediaScreens <= 0) {
-        $('#screensError').show();
-        isValid = false;
-      } else {
-        $('#screensError').hide();
-      }
-
-      // Validate Slots (should be a positive number)
-      if(mediaSlots === '' || mediaSlots <= 0) {
-        $('#slotsError').show();
-        isValid = false;
-      } else {
-        $('#slotsError').hide();
-      }
-
-      // Submit the form if all fields are valid
+      
       if(isValid) {
-        $('#mediaForm').submit();
+        $.ajax({
+          url: 'data_handle',
+          type: 'POST',
+          data: formData,
+          processData: false,
+          contentType: false,
+          success: function(response) {
+            alert('Data submitted successfully!');
+            
+            $('#mediaForm')[0].reset();
+          },
+          error: function(xhr, status, error) {
+            alert('An error occurred: ' + error);
+          }
+        });
       }
     });
   </script>
