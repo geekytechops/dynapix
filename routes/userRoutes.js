@@ -3,7 +3,7 @@ const router = express.Router();
 const fs = require('fs');
 const path = require('path')
 const session = require('express-session');
-const {getMallDetailsController , getSingleMallDetailsController} = require('../controllers/mediaController')
+const {getMallDetailsController , getSingleMallDetailsController , filterMallsController} = require('../controllers/mediaController')
 const { addLobbyMediaController} = require('../controllers/mediaController')
 
 router.use(session({
@@ -17,22 +17,22 @@ router.get('/', (req, res) => {
     res.render('index');
 });
 
-// router.get('/malls', getMallDetailsController);
+// router.get('/malls', getMallDetailsController);  
 router.get('/mall/:id', async (req, res) => {
-    const isLoggedin = req.session.user.isLoggedin || false;
+    const isLoggedin = req.session.user && req.session.user.isLoggedin || false;
     let pageId = req.params.id; 
         pagename='Mall';
         return await getSingleMallDetailsController(isLoggedin,pageId,pagename, res);
 });
 router.get('/theatre/:id', async (req, res) => {
-    const isLoggedin = req.session.user.isLoggedin || false;
+    const isLoggedin = req.session.user && req.session.user.isLoggedin || false;
     let pageId = req.params.id; 
     pagename='Theatre';
     let page = req.params.page; 
         return await getSingleMallDetailsController(isLoggedin,pageId,pagename, res);
 });
 router.get('/fuel-station/:id', async (req, res) => {
-    const isLoggedin = req.session.user.isLoggedin || false;
+    const isLoggedin = req.session.user && req.session.user.isLoggedin || false;
     let pageId = req.params.id; 
     pagename='Fuel Station';
         return await getSingleMallDetailsController(isLoggedin,pageId,pagename, res);
@@ -40,9 +40,11 @@ router.get('/fuel-station/:id', async (req, res) => {
 
 router.post('/add-lobby-media/:id', addLobbyMediaController);
 
+router.post('/filter-malls', filterMallsController);
+
 router.get('/:page', async (req, res) => {
 
-    const isLoggedin = req.session.user.isLoggedin || false;
+    const isLoggedin = req.session.user && req.session.user.isLoggedin || false;
     let page = req.params.page; 
     if(page=='malls'){
         pagename='Mall';

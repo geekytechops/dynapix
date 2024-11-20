@@ -15,6 +15,8 @@
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+        
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <style>
             .title {
     position: relative;
@@ -88,9 +90,19 @@
                     <div class="col-12">
                         <div class="selectbar">
                             <h1 class="title"><span class="headingbg">Malls</span></h1>
-                            <select>
+                            <select onchange="fetchMalls($(this).val())">
                                 <option>Location</option>
+                                <% 
+                                    // Extract unique locations
+                                    const uniqueLocations = [...new Set(mallData.map(mall => mall.md_location))]; 
+                                %>
+                                <% if (uniqueLocations.length > 0) { %>
+                                    <% uniqueLocations.forEach((location) => { %>
+                                        <option value="<%= location %>"><%= location %></option>
+                                    <% }) %>
+                                <% } %>
                             </select>
+                            
                             <select>
                                 <option>AD Options</option>
                             </select>
@@ -155,12 +167,12 @@
                             <% } %>
                             <% if (mallData.length > 0) { %>
                                 <% mallData.forEach((mall) => { %>
-                                    <a href="/mall/<%= mall.md_id || '#' %>" class="wrap">
+                                    <a href="/mall/<%= mall.md_id || '#' %>" class="wrap" id="media_<%= mall.md_id %>">
                                         <img src="./<%= mall.md_image || 'images/default.jpg' %>">
                                         <div class="content">
                                             <h2 class="title">
                                                 <%= mall.md_name %>
-                                                <i class="fas fa-edit edit-icon" title="Edit"></i>
+                                                <!-- <i class="fas fa-edit edit-icon" title="Edit"></i> -->
                                             </h2>
                                             <div class="stats">
                                                 <div class="wrap"><i class="fas fa-map-pin"></i> <%= mall.md_location %></div>
@@ -256,6 +268,43 @@
              $(document).on("click",".menuiitem", function(){
                 $("#btnclose").trigger("click");
             })
+            function fetchMalls(location) {
+        if (!location || location === 'Location') {
+            document.getElementById('mallsContainer').innerHTML = '';
+            return;
+        }
+
+        $.ajax({
+            url: '/filter-malls', // Endpoint to fetch malls
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ location }),
+            success: function (response) {
+                // Render malls dynamically in the container
+                let html = '';
+                $('a[id^="media_"]').hide();
+                
+                for(i=0;i<response.malls.length;i++){
+                    console.log(response.malls[i])
+                    $('#media_'+response.malls[i].md_id).show();
+                }
+                // if (response.malls.length > 0) {
+                //     html = '<ul>';
+                //     response.malls.forEach(mall => {
+                //         html += `<li>${mall.md_name} - ${mall.md_location}</li>`;
+                //     });
+                //     html += '</ul>';
+                // } else {
+                //     html = '<p>No malls found for this location.</p>';
+                // }
+                
+            },
+            error: function (err) {
+                console.error(err);
+                alert('An error occurred while fetching malls.');
+            }
+        });
+    }
 
         </script>
         

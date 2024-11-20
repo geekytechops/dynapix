@@ -1084,7 +1084,8 @@ body.dark footer .col-12 > .row{
     border-radius: 30px;
     padding: 5px 15px;
     background: none;
-    color: #fff;
+    color: #000000;
+    background-color: #fff;
     font-size: 14px;
 }
 

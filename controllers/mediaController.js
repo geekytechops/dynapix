@@ -40,6 +40,26 @@ const updateMediaController = async (req, res) => {
     }
 };
 
+const filterMallsController = async (req, res) => {
+    const { location } = req.body;
+
+    if (!location) {
+        return res.status(400).json({ message: 'Location is required' });
+    }
+
+    try {
+        const malls = await MediaModel.getFilteredMalls(location);
+        if (malls.length > 0) {
+            res.status(200).json({ malls });
+        } else {
+            res.status(404).json({ message: 'No malls found for this location.' });
+        }
+    } catch (error) {
+        console.error('Error filtering malls:', error.message);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+
 const getSingleMallDetailsController = async (isLoggedin,pageId,page, res) => {
     const mallId = pageId;
 
@@ -123,4 +143,4 @@ const getMallDetailsController = async (isLoggedin,page, res) => {
     }
 };
 
-module.exports = { addMediaController , addLobbyMediaController , updateMediaController,  getMallDetailsController ,getSingleMallDetailsController , getSingleMallEditDetailsController };
+module.exports = { addMediaController , filterMallsController , addLobbyMediaController , updateMediaController,  getMallDetailsController ,getSingleMallDetailsController , getSingleMallEditDetailsController };

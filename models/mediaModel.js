@@ -9,9 +9,9 @@ const MediaModel = {
             const query = "SELECT * FROM dypx_media_data WHERE md_location_type = ?"; // Adjust condition if needed
             db.query(query,[page], (err, results) => {
                 if (err) {
-                    return reject(err); // Reject on error
+                    return reject(err); 
                 }
-                resolve(results); // Resolve with results
+                resolve(results); 
             });
         });
     },
@@ -28,6 +28,20 @@ const MediaModel = {
             });
         });
     },
+
+    getFilteredMalls : (location) => {
+        return new Promise((resolve, reject) => {
+            const query = "SELECT * FROM dypx_media_data WHERE md_location = ?";
+            
+            db.query(query, [location], (err, results) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(results);
+            });
+        });
+    },
+
     getSingleMallEditDetail: (mallId) => {
         return new Promise((resolve, reject) => {
             const query = "SELECT * FROM dypx_media_data WHERE md_id = ?";
