@@ -29,6 +29,20 @@ const MediaModel = {
         });
     },
 
+    getMallAdLocations: (mallId) => {
+        return new Promise((resolve, reject) => {
+            const query = "SELECT * FROM dypx_media_ad_location WHERE md_id = ?";
+            
+            // Use parameterized query to prevent SQL injection
+            db.query(query, [mallId], (err, results) => {
+                if (err) {
+                    return reject(err); // Reject the promise with the error
+                }
+                resolve(results); // Resolve with all associated locations
+            });
+        });
+    },
+
     getFilteredMalls : (location) => {
         return new Promise((resolve, reject) => {
             const query = "SELECT * FROM dypx_media_data WHERE md_location = ?";

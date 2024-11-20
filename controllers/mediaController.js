@@ -60,22 +60,32 @@ const filterMallsController = async (req, res) => {
     }
 };
 
-const getSingleMallDetailsController = async (isLoggedin,pageId,page, res) => {
+const getSingleMallDetailsController = async (isLoggedin, pageId, page, res) => {
     const mallId = pageId;
 
     try {
-        const mallDetails = await MediaModel.getSingleMallDetail(mallId,page);
+        // Fetch single mall details
+        const mallDetails = await MediaModel.getSingleMallDetail(mallId, page);
 
         if (!mallDetails) {
             return res.status(404).send('Mall not found');
         }
 
-        res.render('mallDetails', { mall: mallDetails, isLoggedin:isLoggedin });
+        // Fetch associated ad locations for the mall
+        const mallAdLocations = await MediaModel.getMallAdLocations(mallId);
+
+        // Return both mall details and ad locations in the response
+        res.render('mallDetails', { 
+            mall: mallDetails, 
+            locations: mallAdLocations, 
+            isLoggedin: isLoggedin 
+        });
     } catch (error) {
-        console.error('Error fetching mall details:', error.message);
+        console.error('Error fetching mall details or ad locations:', error.message);
         res.status(500).send('Internal Server Error');
     }
 };
+
 
 const getSingleMallEditDetailsController = async (pageId, res) => {
     const mallId = pageId;

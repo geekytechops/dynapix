@@ -307,6 +307,31 @@
                             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mediaModal">Add Media Location</button>
                             <% } %>
                            </span></h3>
+
+                          <!-- Loop through the locations and display their content -->
+<% if (locations.length > 0) { %>
+    <% locations.forEach(location => { %>
+        <div class="wrap">
+            <img src="../<%= location.md_ad_image || 'images/default.jpg' %>" alt="Image for <%= location.type %>">
+            <div class="content">
+                <h2 class="title"><%= location.md_ad_name %></h2>
+                <div class="stats full">
+                    <div class="wrap">Type: <%= location.md_ad_type %></div>
+                    <div class="wrap">Size: <%= location.md_ad_size %></div>
+                    <div class="wrap">No. of Screens: <%= location.md_ad_num_screen %></div>
+                    <div class="wrap">No. of Slots: <%= location.md_ad_num_slots %></div>
+                    <div class="wrap">Duration: <%= location.md_ad_num_duration %></div>
+                    <div class="wrap">Loop Time: <%= location.md_ad_looptime %></div>
+                    <div class="wrap">Approx Footfalls: <span><%= location.md_ad_footfalls %></span></div>
+                </div>
+            </div>
+        </div>
+    <% }); %>
+<% } else { %>
+    <p>No locations available for this mall.</p>
+<% } %>
+
+
                             <div class="wrap">
                                 <img src="../images/inventory/inv-fcm-1.jpeg">
                                 <div class="content">
