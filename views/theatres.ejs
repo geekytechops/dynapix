@@ -130,6 +130,22 @@
                                     </div>
                                 </div>
                             </a>
+                            <% if (mallData.length > 0) { %>
+                                <% mallData.forEach((mall) => { %>
+                                    <a href="/theatre/<%= mall.md_id || '#' %>" class="wrap">
+                                        <img src="./<%= mall.md_image || 'images/default.jpg' %>">
+                                        <div class="content">
+                                            <h2 class="title"><%= mall.md_name %></h2>
+                                            <div class="stats">
+                                                <div class="wrap"><i class="fas fa-map-pin"></i> <%= mall.md_location %></div>
+                                                <div class="wrap"><i class="fas fa-display"></i> <%= mall.md_num_screens %></div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                <% }); %>
+                            <% } else { %>
+                                <p>No Theatures found.</p>
+                            <% } %>
                         </div>
                     </div>
                 </div>

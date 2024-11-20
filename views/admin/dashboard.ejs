@@ -59,9 +59,9 @@
       <div class="mb-3">
         <label for="mediaType" class="form-label">Media Type</label>
         <select name="mediaType" id="mediaType" class="form-select">
-          <option value="1">Mall</option>
-          <option value="2">Theatre</option>
-          <option value="3">Fuel Station</option>
+          <option value="Mall">Mall</option>
+          <option value="Theatre">Theatre</option>
+          <option value="Fuel Station">Fuel Station</option>
         </select>
         <div class="error-message" id="TypeError">Please select a valid Type.</div>
       </div>
@@ -78,6 +78,11 @@
       <div class="mb-3">
         <label for="mediaDescription" class="form-label">Media Description</label>
         <textarea class="form-control" id="mediaDescription" name="mediaDescription" rows="3" placeholder="Enter media description" required></textarea>
+        <div class="error-message" id="descriptionError">Please enter a description.</div>
+      </div>
+      <div class="mb-3">
+        <label for="mediaLocation" class="form-label">Media Location</label>
+        <textarea class="form-control" id="mediaLocation" name="mediaLocation" placeholder="Enter media Location" required></textarea>
         <div class="error-message" id="descriptionError">Please enter a description.</div>
       </div>
       <div class="row">
@@ -133,7 +138,7 @@
   <script>
     // Show or hide additional fields based on media type selection
     $('#mediaType').change(function() {
-      if ($(this).val() == '3') { // Show additional fields for Fuel Station
+      if ($(this).val() == 'Fuel Station') { 
         $('.additional-fields').show();
       } else {
         $('.additional-fields').hide();
@@ -153,6 +158,7 @@
       if($('#mediaTitle').val() === '') { $('#titleError').show(); isValid = false; } else { $('#titleError').hide(); }
       if($('#mediaImage').val() === '') { $('#imageError').show(); isValid = false; } else { $('#imageError').hide(); }
       if($('#mediaDescription').val() === '') { $('#descriptionError').show(); isValid = false; } else { $('#descriptionError').hide(); }
+      if($('#mediaLocation').val() === '') { $('#locationError').show(); isValid = false; } else { $('#locationError').hide(); }
       if($('#mediaFootfalls').val() === '' || $('#mediaFootfalls').val() <= 0) { $('#footfallsError').show(); isValid = false; } else { $('#footfallsError').hide(); }
       if($('#mediaDuration').val() === '' || $('#mediaDuration').val() <= 0) { $('#durationError').show(); isValid = false; } else { $('#durationError').hide(); }
       if($('#mediaScreens').val() === '' || $('#mediaScreens').val() <= 0) { $('#screensError').show(); isValid = false; } else { $('#screensError').hide(); }
@@ -168,7 +174,7 @@
       
       if(isValid) {
         $.ajax({
-          url: 'data_handle',
+          url: '/add-media',
           type: 'POST',
           data: formData,
           processData: false,

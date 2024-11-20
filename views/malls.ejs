@@ -15,6 +15,27 @@
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+        <style>
+            .title {
+    position: relative;
+    display: inline-block;
+}
+
+.edit-icon {
+    font-size: 0.8em; /* Adjust size relative to the text */
+    margin-left: 8px; /* Space between text and icon */
+    color: #007bff; /* Edit icon color */
+    cursor: pointer;
+    position: absolute;
+    right: -20px; /* Adjust based on your layout */
+    top: 0;
+}
+
+.edit-icon:hover {
+    color: #0056b3; /* Hover color for the icon */
+}
+
+        </style>
     </head>
     
     <body class="dark">
@@ -130,6 +151,28 @@
                                     </div>
                                 </div>
                             </a>
+                            <% if(isLoggedin){ %>
+                            <% } %>
+                            <% if (mallData.length > 0) { %>
+                                <% mallData.forEach((mall) => { %>
+                                    <a href="/mall/<%= mall.md_id || '#' %>" class="wrap">
+                                        <img src="./<%= mall.md_image || 'images/default.jpg' %>">
+                                        <div class="content">
+                                            <h2 class="title">
+                                                <%= mall.md_name %>
+                                                <i class="fas fa-edit edit-icon" title="Edit"></i>
+                                            </h2>
+                                            <div class="stats">
+                                                <div class="wrap"><i class="fas fa-map-pin"></i> <%= mall.md_location %></div>
+                                                <div class="wrap"><i class="fas fa-display"></i> <%= mall.md_num_screens %></div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                <% }); %>
+                            <% } else { %>
+                                <p>No malls found.</p>
+                            <% } %>
+                            
                         </div>
                     </div>
                 </div>

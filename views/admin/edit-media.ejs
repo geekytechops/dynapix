@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Media Entry Form</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <style>
+    body {
+      background-color: #212121;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .card {
+      width: 100%;
+      max-width: 600px;
+      padding: 30px;
+      background-color: #333;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.8);
+    }
+    .form-control {
+      background-color: #444;
+      border: 1px solid #555;
+      color: #fff;
+    }
+    .form-control:focus {
+      background-color: #444;
+      color: #fff;
+      border-color: #777;
+      box-shadow: none;
+    }
+    .btn-primary {
+      background-color: #5A9;
+      border: none;
+    }
+    .btn-primary:hover {
+      background-color: #4A8;
+    }
+    .error-message {
+      color: #f00;
+      font-size: 0.9em;
+      display: none;
+    }
+    .additional-fields {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+    <div class="card">
+        <h3 class="text-center mb-4">Edit Media Information</h3>
+        <form id="editMediaForm">
+          <input type="hidden" id="mediaId" name="mediaId" value="<%= mall.md_id %>">
+          <div class="mb-3">
+            <label for="mediaType" class="form-label">Media Type</label>
+            <select name="mediaType" id="mediaType" class="form-select">
+              <option value="Mall" <%= mall.md_type === 'Mall' ? 'selected' : '' %>>Mall</option>
+              <option value="Theatre" <%= mall.md_type === 'Theatre' ? 'selected' : '' %>>Theatre</option>
+              <option value="Fuel Station" <%= mall.md_type === 'Fuel Station' ? 'selected' : '' %>>Fuel Station</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="mediaTitle" class="form-label">Media Title</label>
+            <input type="text" class="form-control" id="mediaTitle" name="mediaTitle" value="<%= mall.md_name %>" required>
+          </div>
+          <div class="mb-3">
+            <label for="mediaImage" class="form-label">Media Image</label>
+            <img src="../../<%= mall.md_image ? mall.md_image : 'images/default.jpg' %>" alt="Current Image" class="img-thumbnail mb-2">
+            <input type="file" class="form-control" id="mediaImage" name="mediaImage" accept="image/*">
+            <input type="hidden" name="existingImage" value="<%= mall.md_image %>">
+          </div>
+          <div class="mb-3">
+            <label for="mediaDescription" class="form-label">Media Description</label>
+            <textarea class="form-control" id="mediaDescription" name="mediaDescription" rows="3" required><%= mall.md_description %></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="mediaLocation" class="form-label">Media Location</label>
+            <textarea class="form-control" id="mediaLocation" name="mediaLocation" required><%= mall.md_location %></textarea>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="mediaFootfalls" class="form-label">Approximate Footfalls</label>
+              <input type="number" class="form-control" id="mediaFootfalls" name="mediaFootfalls" value="<%= mall.md_footfalls %>" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="mediaDuration" class="form-label">Media Duration (in seconds)</label>
+              <input type="number" class="form-control" id="mediaDuration" name="mediaDuration" value="<%= mall.md_duration %>" required>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary w-100">Update Media Information</button>
+        </form>
+      </div>
+      
+      <script>
+        $('#editMediaForm').submit(function (e) {
+          e.preventDefault();
+        
+          let formData = new FormData(this);
+      
+          $.ajax({
+            url: '/update-media', // API endpoint to update media
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+              alert('Media updated successfully!');
+              window.location.href = '/'; // Redirect after update
+            },
+            error: function (xhr) {
+              alert('Failed to update media: ' + xhr.responseText);
+            },
+          });
+        });
+      </script>
+      
+</body>
+</html>

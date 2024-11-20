@@ -114,8 +114,8 @@
 
           $.ajax({
             type:'post',
-            data:{email:email , password:password , formName:'login_validate'},
-            url:'data_handle',
+            data:{email:email , password:password},
+            url:'/login_validate',
             success:function(data){
               console.log(data.status)
               if(data.status=='error_email'){

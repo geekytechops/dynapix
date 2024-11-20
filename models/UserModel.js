@@ -3,15 +3,19 @@ const db = require('../config/db');
 const UserModel = {
 
     getUserByEmail: (email) => {
+        console.log(email)
         return new Promise((resolve, reject) => {
             const query = "SELECT user_id, username, email, password FROM dypx_users WHERE email = ?";
             db.query(query, [email], (err, results) => {
                 if (err) {
+                    
                     return reject(err);
                 }
                 if (results.length === 0) {
+                    console.log(results)
                     return resolve(null);
                 }
+                
                 resolve(results[0]); 
             });
         });
