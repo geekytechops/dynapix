@@ -21,6 +21,98 @@
     position: relative;
     overflow: hidden;
 }
+.popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95); /* Darker black overlay */
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Arial', sans-serif;
+}
+
+.popup-content {
+    background: linear-gradient(145deg, #222, #333); /* Gradient dark background */
+    border: 1px solid #444;
+    padding: 25px;
+    width: 40%; /* Adjusted for a sleek look */
+    max-width: 500px;
+    max-height: 80%; /* Height adjustment */
+    border-radius: 15px; /* Rounded corners */
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5); /* Smooth shadow effect */
+    color: #fff; /* White text for contrast */
+    animation: fadeIn 0.3s ease-in-out; /* Smooth entry animation */
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 22px;
+    cursor: pointer;
+    color: #f2f2f2; /* Slightly lighter close button */
+    background: #444;
+    padding: 5px 10px;
+    border-radius: 50%;
+    transition: background 0.3s;
+}
+
+.close-btn:hover {
+    background: #555;
+    color: #fff;
+}
+
+.popup img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5); /* Image shadow */
+}
+
+.popup-content h2.title {
+    margin: 10px 0;
+    font-size: 24px;
+    font-weight: bold;
+    color: #f9f9f9; /* Brighter text for titles */
+    border-bottom: 1px solid #555; /* Underline effect */
+    padding-bottom: 8px;
+}
+
+.popup-content .stats {
+    font-size: 14px;
+    line-height: 1.8;
+    color: #ccc; /* Softer white for content */
+}
+
+.popup-content .stats .wrap {
+    margin: 8px 0;
+    display: flex;
+    align-items: center;
+}
+
+.popup-content .stats .wrap span {
+    font-weight: bold;
+    color: #f2f2f2; /* Emphasize spans */
+}
+
 
 .edit-button {
     top: 10px; /* Adjust the spacing from the top */
@@ -77,6 +169,13 @@
                </div>
            </div>
        </header>
+
+       <div id="popup" class="popup">
+        <div class="popup-content">
+            <span class="close-btn">&times;</span>
+            <div id="popup-body"></div>
+        </div>
+    </div>
         
         
         <section class="breadcrumbs">
@@ -203,8 +302,11 @@
                         
                         <div class="mediawrap">
                            <h3 class="subtitle d-flex align-items-center justify-content-between"><span class="headingbg">Screen Location</span><span> 
+                            <% if(isLoggedin){ %>
+                             
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mediaModal">Add Media Location</button>
+                            <% } %>
                            </span></h3>
-                           <!-- <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mediaModal">Add Media Location</button> -->
                             <div class="wrap">
                                 <img src="../images/inventory/inv-fcm-1.jpeg">
                                 <div class="content">
@@ -463,6 +565,42 @@
                     alert(`Error: ${error.message}`);
                 }
                 });
+
+                document.addEventListener("DOMContentLoaded", () => {
+    const wraps = document.querySelectorAll(".wrap");
+    const popup = document.getElementById("popup");
+    const popupBody = document.getElementById("popup-body");
+    const closeBtn = document.querySelector(".close-btn");
+
+    wraps.forEach((wrap) => {
+        wrap.addEventListener("click", () => {
+            const imageSrc = wrap.querySelector("img").getAttribute("src");
+            const contentHTML = wrap.querySelector(".content").innerHTML;
+
+            // Set popup content
+            popupBody.innerHTML = `
+                <img src="${imageSrc}" alt="Popup Image">
+                ${contentHTML}
+            `;
+
+            // Show popup
+            popup.style.display = "flex";
+        });
+    });
+
+    // Close popup
+    closeBtn.addEventListener("click", () => {
+        popup.style.display = "none";
+    });
+
+    // Close popup when clicking outside the content
+    popup.addEventListener("click", (e) => {
+        if (e.target === popup) {
+            popup.style.display = "none";
+        }
+    });
+});
+
 
         </script>
         
