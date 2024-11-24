@@ -7,13 +7,15 @@ const server = http.createServer(app);
 const apiRouter = require('./routes/index');
 const path = require('path');
 const session = require('express-session');
+require('dotenv').config();
 
 app.use(session({
-    secret: 'your_secret_key',
+    secret: process.env.SECRET_KEY,
     resave: false,
     saveUninitialized: true,
     cookie: { secure: false } 
 }));
+
 
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
