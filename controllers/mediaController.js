@@ -5,27 +5,26 @@ const fs = require('fs');
 const updateMediaController = async (req, res) => {
     const mediaId = req.body.mediaId;
     const mediaData = req.body;
-    const mediaImage = req.files ? req.files.mediaImage : null; // Check if a new image is uploaded
+    const mediaImage = req.files ? req.files.mediaImage : null; 
 
-    // Keep the existing image if no new image is uploaded
     if (!mediaImage) {
         mediaData.mediaImage = req.body.existingImage;
     }
 
     try {
-        // Handle file replacement if a new image is uploaded
+        
         if (mediaImage) {
             const existingImagePath = path.join(__dirname, '..', 'uploads', req.body.existingImage);
-            // Delete the old image file if it exists
+            
             if (fs.existsSync(existingImagePath)) {
                 fs.unlink(existingImagePath, (err) => {
                     if (err) console.error('Error deleting old image:', err.message);
                 });
             }
-            // Save the new image
-            mediaData.mediaImage = 'uploads/'+mediaImage.name; // Assuming you're storing the filename
+            
+            mediaData.mediaImage = 'uploads/'+mediaImage.name;
             const uploadPath = path.join(__dirname, '..', 'uploads', mediaImage.name);
-            await mediaImage.mv(uploadPath); // Move the file to the upload directory
+            await mediaImage.mv(uploadPath);
         }
 
         const result = await MediaModel.updateMedia(mediaId, mediaData);
@@ -64,17 +63,17 @@ const getSingleMallDetailsController = async (isLoggedin, pageId, page, res) => 
     const mallId = pageId;
 
     try {
-        // Fetch single mall details
+        
         const mallDetails = await MediaModel.getSingleMallDetail(mallId, page);
 
         if (!mallDetails) {
             return res.status(404).send('Mall not found');
         }
 
-        // Fetch associated ad locations for the mall
+        
         const mallAdLocations = await MediaModel.getMallAdLocations(mallId);
 
-        // Return both mall details and ad locations in the response
+        
         res.render('mallDetails', { 
             mall: mallDetails, 
             locations: mallAdLocations, 
@@ -105,7 +104,7 @@ const getSingleMallEditDetailsController = async (pageId, res) => {
 };
 
 const addLobbyMediaController = async (req, res) => {
-    const mdId = req.params.id; // Extracting `md_id` from URL
+    const mdId = req.params.id; 
     const mediaData = req.body;
     const mediaImage = req.files ? req.files.mediaImage : null;
   
@@ -131,7 +130,6 @@ const addMediaController = async (req, res) => {
 };
 
 const getMallDetailsController = async (isLoggedin,page, res) => {
-    // console.log(page)
        try {
         const mallDetails = await MediaModel.getMallDetails(page); 
         pagename = page.toLowerCase()+'s';
@@ -145,7 +143,7 @@ const getMallDetailsController = async (isLoggedin,page, res) => {
             isLoggedin:isLoggedin
         });
     } catch (error) {
-        // console.log(error)
+        console.log(error)
         res.status(500).render('error', {
             message: 'An error occurred while retrieving mall details.',
             error: error.message,

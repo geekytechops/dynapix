@@ -6,7 +6,7 @@ const MediaModel = {
     getMallDetails: (page) => {
         console.log(page)
         return new Promise((resolve, reject) => {
-            const query = "SELECT * FROM dypx_media_data WHERE md_location_type = ?"; // Adjust condition if needed
+            const query = "SELECT * FROM dypx_media_data WHERE md_location_type = ?"; 
             db.query(query,[page], (err, results) => {
                 if (err) {
                     return reject(err); 
@@ -19,12 +19,11 @@ const MediaModel = {
         return new Promise((resolve, reject) => {
             const query = "SELECT * FROM dypx_media_data WHERE md_location_type = ? AND md_id = ?";
             
-            // Use parameterized query to prevent SQL injection
             db.query(query, [page,mallId], (err, results) => {
                 if (err) {
-                    return reject(err); // Reject the promise with the error
+                    return reject(err); 
                 }
-                resolve(results.length > 0 ? results[0] : null); // Resolve with the first record or null if not found
+                resolve(results.length > 0 ? results[0] : null);
             });
         });
     },
@@ -33,12 +32,11 @@ const MediaModel = {
         return new Promise((resolve, reject) => {
             const query = "SELECT * FROM dypx_media_ad_location WHERE md_id = ?";
             
-            // Use parameterized query to prevent SQL injection
             db.query(query, [mallId], (err, results) => {
                 if (err) {
-                    return reject(err); // Reject the promise with the error
+                    return reject(err); 
                 }
-                resolve(results); // Resolve with all associated locations
+                resolve(results); 
             });
         });
     },
@@ -60,12 +58,11 @@ const MediaModel = {
         return new Promise((resolve, reject) => {
             const query = "SELECT * FROM dypx_media_data WHERE md_id = ?";
             
-            // Use parameterized query to prevent SQL injection
             db.query(query, [mallId], (err, results) => {
                 if (err) {
-                    return reject(err); // Reject the promise with the error
+                    return reject(err); 
                 }
-                resolve(results.length > 0 ? results[0] : null); // Resolve with the first record or null if not found
+                resolve(results.length > 0 ? results[0] : null);
             });
         });
     },
@@ -87,14 +84,14 @@ const MediaModel = {
                 WHERE md_id = ?
             `;
             const params = [
-                mediaData.mediaType,       // 'Mall' or other type
-                mediaData.mediaTitle,      // 'test'
-                mediaData.mediaDescription, // 'tes'
-                mediaData.mediaLocation,    // 'tes'
-                mediaData.mediaFootfalls,   // '20'
-                mediaData.mediaDuration,    // '20'
-                mediaData.mediaImage,       // 'uploads/1731985268577_images_(5).jpg'
-                mediaId,                    // '6'
+                mediaData.mediaType,      
+                mediaData.mediaTitle, 
+                mediaData.mediaDescription,
+                mediaData.mediaLocation,   
+                mediaData.mediaFootfalls,
+                mediaData.mediaDuration,  
+                mediaData.mediaImage,      
+                mediaId,                  
             ];
             db.query(query, params, (err, result) => {
                 if (err) return reject(err);
@@ -119,46 +116,46 @@ const MediaModel = {
                 mediaLoopTime,
             } = mediaData;
 
-            // Default status
+            
             const status = 0;
             let imagePath = null;
 
-            // Handle file upload if provided
+            
             if (mediaImage) {
                 const uploadDir = path.join(__dirname, '../uploads/');
 
-                // Ensure the directory exists
+                
                 if (!fs.existsSync(uploadDir)) {
                     fs.mkdirSync(uploadDir, { recursive: true });
                 }
                 
-                // Generate a unique filename with underscores instead of spaces
+                
                 const timestamp = Date.now();
-                const originalName = mediaImage.name.replace(/\s+/g, '_'); // Replace spaces with underscores
+                const originalName = mediaImage.name.replace(/\s+/g, '_'); 
                 const uniqueName = `${timestamp}_${originalName}`;
                 
-                // Define the path for the uploaded file within the uploads folder
+                
                 const targetFile = path.join(uploadDir, uniqueName);
-                const relativeImagePath = `uploads/${uniqueName}`; // Relative path for storing in the database
+                const relativeImagePath = `uploads/${uniqueName}`;
                 
                 const validExtensions = ['jpg', 'jpeg', 'png', 'gif'];
                 const fileExtension = path.extname(mediaImage.name).toLowerCase();
                 
-                // Validate file type
+                
                 if (!validExtensions.includes(fileExtension.substring(1))) {
                     return reject(new Error('Only JPG, JPEG, PNG, and GIF files are allowed.'));
                 }
                 
-                // Move the file to the uploads folder
+                
                 mediaImage.mv(targetFile, (err) => {
                     if (err) return reject(new Error('Error uploading the file.'));
                 });
                 
-                // Use the relative path for storing in the database
+                
                 imagePath = relativeImagePath;
             }
 
-            // SQL query for inserting data
+            
             const query = `
                 INSERT INTO dypx_media_data 
                 (md_name, md_location_type, md_location, md_image, md_description, md_footfalls, md_duration, 
@@ -193,49 +190,48 @@ const MediaModel = {
     addLobbyMedia: (mdId, mediaData, mediaImage) => {
         return new Promise((resolve, reject) => {
             const {
-                mediaName,     // Matches `mediaName` from the request
-                mediaType,     // Matches `mediaType` from the request
-                mediaSize,     // Matches `mediaSize` from the request
-                mediaScreens,  // Matches `mediaScreens` from the request
-                mediaSlots,    // Matches `mediaSlots` from the request
-                mediaDuration, // Matches `mediaDuration` from the request
-                mediaLoopTime, // Matches `mediaLoopTime` from the request
-                mediaFootfalls // Matches `mediaFootfalls` from the request
+                mediaName,    
+                mediaType,    
+                mediaSize, 
+                mediaScreens, 
+                mediaSlots,    
+                mediaDuration,
+                mediaLoopTime,
+                mediaFootfalls 
             } = mediaData;
     
             let imagePath = null;
     
-            // Handle image upload
+         
             if (mediaImage) {
                 const uploadDir = path.join(__dirname, '../uploads/');
     
-                // Ensure the directory exists
+            
                 if (!fs.existsSync(uploadDir)) {
                     fs.mkdirSync(uploadDir, { recursive: true });
                 }
     
-                // Generate a unique filename with underscores instead of spaces
+             
                 const timestamp = Date.now();
-                const originalName = mediaImage.name.replace(/\s+/g, '_'); // Replace spaces with underscores
+                const originalName = mediaImage.name.replace(/\s+/g, '_');
                 const uniqueName = `${timestamp}_${originalName}`;
                 const targetFile = path.join(uploadDir, uniqueName);
     
-                // Write the file directly to the target location
+       
                 const fileStream = fs.createWriteStream(targetFile);
                 fileStream.on('error', (err) => {
                     return reject(new Error('Error uploading the file.'));
                 });
     
-                // Read the uploaded file from `mediaImage.data` (binary data from form submission) and write it to the disk
+          
                 fileStream.write(mediaImage.data, () => {
                     fileStream.end();
                 });
     
-                // Store the relative path for database entry
                 imagePath = `uploads/${uniqueName}`;
             }
     
-            // SQL query for inserting data
+
             const query = `
                 INSERT INTO dypx_media_ad_location 
                 (md_id, md_ad_name, md_ad_size, md_ad_num_screen, md_ad_num_slots, 
@@ -253,7 +249,7 @@ const MediaModel = {
                 mediaDuration,
                 mediaFootfalls,
                 mediaLoopTime,
-                0, // Default status
+                0, 
                 imagePath,
             ];
     
