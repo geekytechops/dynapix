@@ -197,14 +197,17 @@
                 </div>
                 <div class="modal-body">
                   <form id="lobbyMediaForm">
-                    <div class="mb-3">
-                      <label for="mediaName" class="form-label">Name</label>
-                      <input type="text" class="form-control" id="mediaName" name="mediaName" value="" required>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="mediaName" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="mediaName" name="mediaName" value="" required>
+                          </div>
+                          <div class="col-md-6 mb-3">
+                            <label for="mediaImage" class="form-label">Image</label>
+                            <input type="file" class="form-control" id="mediaImage" name="mediaImage" accept="image/*">
+                          </div>
                     </div>
-                    <div class="mb-3">
-                      <label for="mediaImage" class="form-label">Image</label>
-                      <input type="file" class="form-control" id="mediaImage" name="mediaImage" accept="image/*">
-                    </div>
+
                     <div class="row">
                         <div class="col-md-6 mb-3">
                         <label for="mediaType" class="form-label">Type</label>
