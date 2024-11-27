@@ -17,6 +17,113 @@
         <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
         
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<style>
+
+#popup-body .stats{
+    display:none;
+} 
+
+ .wrap {
+    position: relative;
+    overflow: hidden;
+}
+    .popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95); /* Darker black overlay */
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Arial', sans-serif;
+}
+
+.popup-content {
+    background: linear-gradient(145deg, #222, #333); /* Gradient dark background */
+    border: 1px solid #444;
+    padding: 25px;
+    width: 40%; /* Adjusted for a sleek look */
+    max-width: 500px;
+    max-height: 80%; /* Height adjustment */
+    border-radius: 15px; /* Rounded corners */
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5); /* Smooth shadow effect */
+    color: #fff; /* White text for contrast */
+    animation: fadeIn 0.3s ease-in-out; /* Smooth entry animation */
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.close-btn {
+    position: absolute;
+    width: 38px; /* Adjusted to make it square */
+    height: 38px;
+    top: 8px;
+    right: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #f2f2f2;
+    background: #444;
+    border-radius: 50%;
+    display: flex; /* Use Flexbox for centering */
+    align-items: center; /* Vertical alignment */
+    justify-content: center; /* Horizontal alignment */
+    transition: background 0.3s, transform 0.2s ease-in-out;
+}
+
+.close-btn:hover {
+    background: #555;
+    color: #fff;
+}
+
+.popup img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5); /* Image shadow */
+}
+
+.popup-content h2.title {
+    margin: 10px 0;
+    font-size: 24px;
+    font-weight: bold;
+    color: #f9f9f9; /* Brighter text for titles */
+    border-bottom: 1px solid #555; /* Underline effect */
+    padding-bottom: 8px;
+}
+
+.popup-content .stats {
+    font-size: 14px;
+    line-height: 1.8;
+    color: #ccc; /* Softer white for content */
+}
+
+.popup-content .stats .wrap {
+    margin: 8px 0;
+    display: flex;
+    align-items: center;
+}
+
+.popup-content .stats .wrap span {
+    font-weight: bold;
+    color: #f2f2f2; /* Emphasize spans */
+}
+</style>
     </head>
     
     <body class="dark">
@@ -50,6 +157,13 @@
                </div>
            </div>
        </header>
+
+       <div id="popup" class="popup">
+            <div class="popup-content">
+                <span class="close-btn">&times;</span>
+                <div id="popup-body"></div>
+            </div>
+        </div>
         
         
         <section class="breadcrumbs">
@@ -90,340 +204,11 @@
                         </div>
                     </div>
                     <div class="col-12">
-                        <div class="mediawrap">
-                            <!-- <a href="hpcl-gachibowli.html" class="wrap">
-                                <img src="images/inventory/hpcl-gachibowli.jpg">
-                                <div class="content">
-                                    <h2 class="title">HPCL - Gachibowli</h2>
-                                    <div class="stats">
-                                        <div class="wrap"><i class="fas fa-map-pin"></i> Hyderabad</div>
-                                        <div class="wrap"><i class="fas fa-display"></i> 1</div>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="hpcl-khajaguda.html" class="wrap">
-                                <img src="images/inventory/hpcl-kajaguda.jpg">
-                                <div class="content">
-                                    <h2 class="title">HPCL - Khajaguda</h2>
-                                    <div class="stats">
-                                        <div class="wrap"><i class="fas fa-map-pin"></i> Hyderabad</div>
-                                        <div class="wrap"><i class="fas fa-display"></i> 1</div>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="hpcl-narsingi.html" class="wrap">
-                                <img src="images/inventory/hpcl-narsing.jpeg">
-                                <div class="content">
-                                    <h2 class="title">HPCL - Narsingi</h2>
-                                    <div class="stats">
-                                        <div class="wrap"><i class="fas fa-map-pin"></i> Hyderabad</div>
-                                        <div class="wrap"><i class="fas fa-display"></i> 1</div>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="hpcl-serlingampalli.html" class="wrap">
-                                <img src="images/inventory/hpcl-lingampally.jpg">
-                                <div class="content">
-                                    <h2 class="title">HPCL - Serlingampalli</h2>
-                                    <div class="stats">
-                                        <div class="wrap"><i class="fas fa-map-pin"></i> Hyderabad</div>
-                                        <div class="wrap"><i class="fas fa-display"></i> 1</div>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="hpcl-moosapet.html" class="wrap">
-                                <img src="images/inventory/hpcl-moosapet.jpg">
-                                <div class="content">
-                                    <h2 class="title">HPCL - Moosapet</h2>
-                                    <div class="stats">
-                                        <div class="wrap"><i class="fas fa-map-pin"></i> Hyderabad</div>
-                                        <div class="wrap"><i class="fas fa-display"></i> 1</div>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="hpcl-bhel.html" class="wrap">
-                                <img src="images/inventory/hpcl-bhel.jpeg">
-                                <div class="content">
-                                    <h2 class="title">HPCL - BHEL</h2>
-                                    <div class="stats">
-                                        <div class="wrap"><i class="fas fa-map-pin"></i> Hyderabad</div>
-                                        <div class="wrap"><i class="fas fa-display"></i> 1</div>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="hpcl-shaikpet.html" class="wrap">
-                                <img src="images/inventory/hpcl-shaikpet.jpeg">
-                                <div class="content">
-                                    <h2 class="title">HPCL - Shaikpet</h2>
-                                    <div class="stats">
-                                        <div class="wrap"><i class="fas fa-map-pin"></i> Hyderabad</div>
-                                        <div class="wrap"><i class="fas fa-display"></i> 1</div>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="hpcl-secundrabad.html" class="wrap">
-                                <img src="images/inventory/hpcl-secundrabad.jpeg">
-                                <div class="content">
-                                    <h2 class="title">HPCL - Secundrabad</h2>
-                                    <div class="stats">
-                                        <div class="wrap"><i class="fas fa-map-pin"></i> Hyderabad</div>
-                                        <div class="wrap"><i class="fas fa-display"></i> 1</div>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="hpcl-osmania-univertsiy.html" class="wrap">
-                                <img src="images/inventory/hpcl-ou.jpg">
-                                <div class="content">
-                                    <h2 class="title">HPCL - Osmania Univertsiy</h2>
-                                    <div class="stats">
-                                        <div class="wrap"><i class="fas fa-map-pin"></i> Hyderabad</div>
-                                        <div class="wrap"><i class="fas fa-display"></i> 1</div>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="hpcl-narayanaguda.html" class="wrap">
-                                <img src="images/inventory/hpcl-narayanguda.jpeg">
-                                <div class="content">
-                                    <h2 class="title">HPCL - Narayanaguda Metro Station</h2>
-                                    <div class="stats">
-                                        <div class="wrap"><i class="fas fa-map-pin"></i> Hyderabad</div>
-                                        <div class="wrap"><i class="fas fa-display"></i> 1</div>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="hpcl-kushaiguda.html" class="wrap">
-                                <img src="images/inventory/hpcl-kushaiguda.jpeg">
-                                <div class="content">
-                                    <h2 class="title">HPCL - Kushaiguda</h2>
-                                    <div class="stats">
-                                        <div class="wrap"><i class="fas fa-map-pin"></i> Hyderabad</div>
-                                        <div class="wrap"><i class="fas fa-display"></i> 1</div>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="hpcl-uppal-nagole-road.html" class="wrap">
-                                <img src="images/inventory/hpcl-uppal.jpg">
-                                <div class="content">
-                                    <h2 class="title">HPCL - Uppal to nagole X Rd</h2>
-                                    <div class="stats">
-                                        <div class="wrap"><i class="fas fa-map-pin"></i> Hyderabad</div>
-                                        <div class="wrap"><i class="fas fa-display"></i> 1</div>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="hpcl-uppal-nalla-cheruvu.html" class="wrap">
-                                <img src="images/inventory/hpcl-uppal.jpg">
-                                <div class="content">
-                                    <h2 class="title">HPCL - Uppal Opp; Nalla cheruvu</h2>
-                                    <div class="stats">
-                                        <div class="wrap"><i class="fas fa-map-pin"></i> Hyderabad</div>
-                                        <div class="wrap"><i class="fas fa-display"></i> 1</div>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="hpcl-attapur.html" class="wrap">
-                                <img src="images/inventory/hpcl-attapur.jpg">
-                                <div class="content">
-                                    <h2 class="title">HPCL - Attapur</h2>
-                                    <div class="stats">
-                                        <div class="wrap"><i class="fas fa-map-pin"></i> Hyderabad</div>
-                                        <div class="wrap"><i class="fas fa-display"></i> 1</div>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="hpcl-gopanapalli.html" class="wrap">
-                                <img src="images/inventory/hpcl-gopannapally.jpeg">
-                                <div class="content">
-                                    <h2 class="title">HPCL - Gopanapalli</h2>
-                                    <div class="stats">
-                                        <div class="wrap"><i class="fas fa-map-pin"></i> Hyderabad</div>
-                                        <div class="wrap"><i class="fas fa-display"></i> 1</div>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="hpcl-karmanghat.html" class="wrap">
-                                <img src="images/inventory/hpcl-karmanghat.jpeg">
-                                <div class="content">
-                                    <h2 class="title">HPCL - Karmanghat</h2>
-                                    <div class="stats">
-                                        <div class="wrap"><i class="fas fa-map-pin"></i> Hyderabad</div>
-                                        <div class="wrap"><i class="fas fa-display"></i> 1</div>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="hpcl-somajiguda.html" class="wrap">
-                                <img src="images/inventory/hpcl-somajiguda.jpeg">
-                                <div class="content">
-                                    <h2 class="title">HPCL - Somajiguda</h2>
-                                    <div class="stats">
-                                        <div class="wrap"><i class="fas fa-map-pin"></i> Hyderabad</div>
-                                        <div class="wrap"><i class="fas fa-display"></i> 1</div>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="hpcl-nallagandla-dwarakamai.html" class="wrap">
-                                <img src="images/inventory/hpcl-dwaraka-mai.jpeg">
-                                <div class="content">
-                                    <h2 class="title">HPCL - Nallagandla, Dwarakamai</h2>
-                                    <div class="stats">
-                                        <div class="wrap"><i class="fas fa-map-pin"></i> Hyderabad</div>
-                                        <div class="wrap"><i class="fas fa-display"></i> 1</div>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="hpcl-moosapet-nrc-sons.html" class="wrap">
-                                <img src="images/inventory/hpcl-nrcsons.jpeg">
-                                <div class="content">
-                                    <h2 class="title">HPCL - Moosapet, NRC & sons</h2>
-                                    <div class="stats">
-                                        <div class="wrap"><i class="fas fa-map-pin"></i> Hyderabad</div>
-                                        <div class="wrap"><i class="fas fa-display"></i> 1</div>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="hpcl-mayabazar.html" class="wrap">
-                                <img src="images/logos/hpcllogo.jpg">
-                                <div class="content">
-                                    <h2 class="title">HPCL - Mayabazar</h2>
-                                    <div class="stats">
-                                        <div class="wrap"><i class="fas fa-map-pin"></i> Guntur</div>
-                                        <div class="wrap"><i class="fas fa-display"></i> 1</div>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="hpcl-kottamas-centre.html" class="wrap">
-                                <img src="images/logos/hpcllogo.jpg">
-                                <div class="content">
-                                    <h2 class="title">HPCL - Kottamas Centre</h2>
-                                    <div class="stats">
-                                        <div class="wrap"><i class="fas fa-map-pin"></i> Guntur</div>
-                                        <div class="wrap"><i class="fas fa-display"></i> 1</div>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="hpcl-mg-road.html" class="wrap">
-                                <img src="images/inventory/hpcl-mgroad.jpeg">
-                                <div class="content">
-                                    <h2 class="title">HPCL - MG Road</h2>
-                                    <div class="stats">
-                                        <div class="wrap"><i class="fas fa-map-pin"></i> Vijayawada</div>
-                                        <div class="wrap"><i class="fas fa-display"></i> 1</div>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="hpcl-autonagar.html" class="wrap">
-                                <img src="images/inventory/hpcl-autonagar-vij.jpeg">
-                                <div class="content">
-                                    <h2 class="title">HPCL - Autonagar</h2>
-                                    <div class="stats">
-                                        <div class="wrap"><i class="fas fa-map-pin"></i> Vijayawada</div>
-                                        <div class="wrap"><i class="fas fa-display"></i> 1</div>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="hpcl-eluru-road.html" class="wrap">
-                                <img src="images/inventory/hpcl-eluru-road.jpeg">
-                                <div class="content">
-                                    <h2 class="title">HPCL - Eluru Road (BSNL Office)</h2>
-                                    <div class="stats">
-                                        <div class="wrap"><i class="fas fa-map-pin"></i> Vijayawada</div>
-                                        <div class="wrap"><i class="fas fa-display"></i> 1</div>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="hpcl-siripuram-1.html" class="wrap">
-                                <img src="images/inventory/hpcl-siripuram1.jpeg">
-                                <div class="content">
-                                    <h2 class="title">HPCL - Siripuram 1</h2>
-                                    <div class="stats">
-                                        <div class="wrap"><i class="fas fa-map-pin"></i> Vizag</div>
-                                        <div class="wrap"><i class="fas fa-display"></i> 1</div>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="hpcl-siripuram-2.html" class="wrap">
-                                <img src="images/inventory/hpcl-siripuram-2.jpeg">
-                                <div class="content">
-                                    <h2 class="title">HPCL - Siripuram 2</h2>
-                                    <div class="stats">
-                                        <div class="wrap"><i class="fas fa-map-pin"></i> Vizag</div>
-                                        <div class="wrap"><i class="fas fa-display"></i> 1</div>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="hpcl-polamambha.html" class="wrap">
-                                <img src="images/inventory/hpcl-polamamba.jpeg">
-                                <div class="content">
-                                    <h2 class="title">HPCL - Polamambha</h2>
-                                    <div class="stats">
-                                        <div class="wrap"><i class="fas fa-map-pin"></i> Vizag</div>
-                                        <div class="wrap"><i class="fas fa-display"></i> 1</div>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="hpcl-resuvaripalem.html" class="wrap">
-                                <img src="images/inventory/hpcl-resuvaripalem.jpeg">
-                                <div class="content">
-                                    <h2 class="title">HPCL - Resuvaripalem</h2>
-                                    <div class="stats">
-                                        <div class="wrap"><i class="fas fa-map-pin"></i> Vizag</div>
-                                        <div class="wrap"><i class="fas fa-display"></i> 1</div>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="hpcl-tiwariganj.html" class="wrap">
-                                <img src="images/inventory/hpcl-tivariganj.jpeg">
-                                <div class="content">
-                                    <h2 class="title">HPCL - Tiwariganj</h2>
-                                    <div class="stats">
-                                        <div class="wrap"><i class="fas fa-map-pin"></i> Lucknow</div>
-                                        <div class="wrap"><i class="fas fa-display"></i> 1</div>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="hpcl-hazratganj.html" class="wrap">
-                                <img src="images/inventory/hpcl-hazarathganj.jpeg">
-                                <div class="content">
-                                    <h2 class="title">HPCL - Hazratganj</h2>
-                                    <div class="stats">
-                                        <div class="wrap"><i class="fas fa-map-pin"></i> Lucknow</div>
-                                        <div class="wrap"><i class="fas fa-display"></i> 1</div>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="hpcl-sachivalaya.html" class="wrap">
-                                <img src="images/inventory/hpcl-sachivalayam.jpeg">
-                                <div class="content">
-                                    <h2 class="title">HPCL - Sachivalaya</h2>
-                                    <div class="stats">
-                                        <div class="wrap"><i class="fas fa-map-pin"></i> Lucknow</div>
-                                        <div class="wrap"><i class="fas fa-display"></i> 1</div>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="hpcl-alambagh.html" class="wrap">
-                                <img src="images/inventory/hpcl-alambagh.jpeg">
-                                <div class="content">
-                                    <h2 class="title">HPCL - Alambagh</h2>
-                                    <div class="stats">
-                                        <div class="wrap"><i class="fas fa-map-pin"></i> Lucknow</div>
-                                        <div class="wrap"><i class="fas fa-display"></i> 1</div>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="hpcl-vip-road.html" class="wrap">
-                                <img src="images/inventory/hpcl-viproad.jpeg">
-                                <div class="content">
-                                    <h2 class="title">HPCL - VIP Road</h2>
-                                    <div class="stats">
-                                        <div class="wrap"><i class="fas fa-map-pin"></i> Lucknow</div>
-                                        <div class="wrap"><i class="fas fa-display"></i> 1</div>
-                                    </div>
-                                </div>
-                            </a> -->
+                        <div class="mediawrap">                           
                             <% if (mallData.length > 0) { %>
                                 <% mallData.forEach((mall) => { %>
-                                    <a href="/fuel-station/<%= mall.md_id || '#' %>" class="wrap" id="media_<%= mall.md_id %>">
+                                    <a href="javascript:void(0)" class="wrap" id="media_<%= mall.md_id %>">
+                                    <!-- <a href="/fuel-station/<%= mall.md_id || '#' %>" class="wrap" id="media_<%= mall.md_id %>"> -->
                                         <img src="./<%= mall.md_image || 'images/default.jpg' %>">
                                         <div class="content">
                                             <h2 class="title"><%= mall.md_name %></h2>
@@ -558,6 +343,41 @@
             }
         });
     }
+
+    document.addEventListener("DOMContentLoaded", () => {
+    const wraps = document.querySelectorAll(".wrap");
+    const popup = document.getElementById("popup");
+    const popupBody = document.getElementById("popup-body");
+    const closeBtn = document.querySelector(".close-btn");
+
+    wraps.forEach((wrap) => {
+        wrap.addEventListener("click", () => {
+            const imageSrc = wrap.querySelector("img").getAttribute("src");
+            const contentHTML = wrap.querySelector(".content").innerHTML;
+
+            // Set popup content
+            popupBody.innerHTML = `
+                <img src="${imageSrc}" alt="Popup Image">
+                ${contentHTML}
+            `;
+
+            // Show popup
+            popup.style.display = "flex";
+        });
+    });
+
+    // Close popup
+    closeBtn.addEventListener("click", () => {
+        popup.style.display = "none";
+    });
+
+    // Close popup when clicking outside the content
+    popup.addEventListener("click", (e) => {
+        if (e.target === popup) {
+            popup.style.display = "none";
+        }
+    });
+});
 
         </script>
         

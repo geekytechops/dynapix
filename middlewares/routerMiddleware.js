@@ -8,5 +8,14 @@ const redirectHtmlMiddleware = ((req, res, next) => {
     next();
 });
 
+const isAuthenticated = ((req, res, next) => {
+    console.log('test');
+    const isLoggedin = req.session.user && req.session.user.isLoggedin || false;
+    if (!isLoggedin) {
+        return res.redirect('/admin');
+    }
+    next(); 
+})
 
-module.exports = redirectHtmlMiddleware;
+
+module.exports = { redirectHtmlMiddleware , isAuthenticated };

@@ -17,6 +17,11 @@
         <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <style>
+
+#popup-body .stats{
+    display:none;
+} 
+
             .wrap {
     position: relative;
     overflow: hidden;
@@ -63,15 +68,20 @@
 
 .close-btn {
     position: absolute;
-    top: 10px;
+    width: 38px; /* Adjusted to make it square */
+    height: 38px;
+    top: 8px;
     right: 15px;
-    font-size: 22px;
+    font-size: 20px;
+    font-weight: bold;
     cursor: pointer;
-    color: #f2f2f2; /* Slightly lighter close button */
+    color: #f2f2f2;
     background: #444;
-    padding: 5px 10px;
     border-radius: 50%;
-    transition: background 0.3s;
+    display: flex; /* Use Flexbox for centering */
+    align-items: center; /* Vertical alignment */
+    justify-content: center; /* Horizontal alignment */
+    transition: background 0.3s, transform 0.2s ease-in-out;
 }
 
 .close-btn:hover {
@@ -209,16 +219,24 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-6 mb-3">
+                        <!-- <div class="col-md-6 mb-3">
                         <label for="mediaType" class="form-label">Type</label>
                         <input type="text" class="form-control" id="mediaType" name="mediaType" value="" readonly>
-                        </div>
-                        <div class="col-md-6 mb-3">
+                        </div> -->
+                        <div class="col-md-4 mb-3">
                         <label for="mediaSize" class="form-label">Size</label>
                         <input type="text" class="form-control" id="mediaSize" name="mediaSize" value="" required>
                         </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="mediaScreens" class="form-label">No. of Screens</label>
+                            <input type="number" class="form-control" id="mediaScreens" name="mediaScreens" value="" required>
+                          </div>
+                          <div class="col-md-4 mb-3">
+                            <label for="mediaSlots" class="form-label">No. of Slots</label>
+                            <input type="number" class="form-control" id="mediaSlots" name="mediaSlots" value="" required>
+                          </div>
                     </div>
-                    <div class="row">
+                    <!-- <div class="row">
                       <div class="col-md-6 mb-3">
                         <label for="mediaScreens" class="form-label">No. of Screens</label>
                         <input type="number" class="form-control" id="mediaScreens" name="mediaScreens" value="" required>
@@ -227,7 +245,7 @@
                         <label for="mediaSlots" class="form-label">No. of Slots</label>
                         <input type="number" class="form-control" id="mediaSlots" name="mediaSlots" value="" required>
                       </div>
-                    </div>
+                    </div> -->
                     <div class="row">
                       <div class="col-md-4 mb-3">
                         <label for="mediaDuration" class="form-label">Duration</label>

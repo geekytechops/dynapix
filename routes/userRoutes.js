@@ -16,7 +16,6 @@ router.use(session({
 router.get('/', (req, res) => {
     res.render('index');
 });
-
 // router.get('/malls', getMallDetailsController);  
 router.get('/mall/:id', async (req, res) => {
     const isLoggedin = req.session.user && req.session.user.isLoggedin || false;
