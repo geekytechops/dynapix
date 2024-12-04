@@ -155,7 +155,7 @@ $('#deleteMedia').click(function () {
             data: { id: mallId },
             success: function () {
                 alert('Media deleted successfully!');
-                window.location.href = '/'; // Redirect to home after deletion
+                window.location.href = '/media'; // Redirect to home after deletion
             },
             error: function (xhr) {
                 alert('Failed to delete media: ' + xhr.responseText);
