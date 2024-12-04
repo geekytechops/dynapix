@@ -193,8 +193,8 @@
                                     </div>
                                 </div>
                             </a> -->
-                            <% if(isLoggedin){ %>
-                            <% } %>
+                            
+                            
                             <% if (mallData.length > 0) { %>
                                 <% mallData.forEach((mall) => { %>
                                     <div class="wrap" id="media_<%= mall.md_id %>">
@@ -210,9 +210,11 @@
                                                 </div>
                                             </div>
                                         </a>
+<% if(isLoggedin){ %>
                                         <button class="edit-icon" title="Edit" onclick="editMedia(event, '<%= mall.md_id || '/' %>')">
                                             <i class="fas fa-edit"></i>
                                         </button>
+<% } %>
                                     </div>
                                 <% }); %>
                                 
