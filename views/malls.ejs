@@ -22,19 +22,49 @@
     position: relative;
     display: inline-block;
 }
+.wrap {
+    position: relative; /* Parent container for positioning */
+    display: inline-block; /* Adjust display to fit content */
+    width: 300px; /* Example width */
+    margin: 10px; /* Spacing */
+    border-radius: 8px; /* Optional styling */
+    overflow: hidden; /* Ensure the edit button stays inside */
+    color:#fff;
+}
+.title{
+    color:#fff;
+}
+
+.wrap img {
+    width: 100%;
+    height: auto;
+}
+
+.content {
+    padding: 10px;
+}
 
 .edit-icon {
-    font-size: 0.8em; /* Adjust size relative to the text */
-    margin-left: 8px; /* Space between text and icon */
-    color: #007bff; /* Edit icon color */
-    cursor: pointer;
     position: absolute;
-    right: -20px; /* Adjust based on your layout */
-    top: 0;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+    border: none;
+    border-radius: 50%; /* Circle shape */
+    padding: 8px;
+    cursor: pointer;
+    z-index: 10; /* Ensure it overlays other content */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional shadow */
+    transition: transform 0.2s ease;
 }
 
 .edit-icon:hover {
-    color: #0056b3; /* Hover color for the icon */
+    transform: scale(1.1); /* Slight zoom on hover */
+}
+
+.edit-icon i {
+    font-size: 16px; /* Adjust icon size */
+    color: #333; /* Icon color */
 }
 
         </style>
@@ -167,20 +197,26 @@
                             <% } %>
                             <% if (mallData.length > 0) { %>
                                 <% mallData.forEach((mall) => { %>
-                                    <a href="/mall/<%= mall.md_id || '#' %>" class="wrap" id="media_<%= mall.md_id %>">
-                                        <img src="./<%= mall.md_image || 'images/default.jpg' %>">
-                                        <div class="content">
-                                            <h2 class="title">
-                                                <%= mall.md_name %>
-                                                <!-- <i class="fas fa-edit edit-icon" title="Edit"></i> -->
-                                            </h2>
-                                            <div class="stats">
-                                                <div class="wrap"><i class="fas fa-map-pin"></i> <%= mall.md_location %></div>
-                                                <div class="wrap"><i class="fas fa-display"></i> <%= mall.md_num_screens %></div>
+                                    <div class="wrap" id="media_<%= mall.md_id %>">
+                                        <a href="/mall/<%= mall.md_id || '#' %>">
+                                            <img src="./<%= mall.md_image || 'images/default.jpg' %>">
+                                            <div class="content">
+                                                <h2 class="title">
+                                                    <%= mall.md_name %>
+                                                </h2>
+                                                <div class="stats">
+                                                    <div class="wrap"><i class="fas fa-map-pin"></i> <%= mall.md_location %></div>
+                                                    <div class="wrap"><i class="fas fa-display"></i> <%= mall.md_num_screens %></div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </a>
+                                        </a>
+                                        <button class="edit-icon" title="Edit" onclick="editMedia(event, '<%= mall.md_id || '/' %>')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </div>
                                 <% }); %>
+                                
+                                
                             <% } %>
                               
                             
@@ -303,6 +339,11 @@
                 alert('An error occurred while fetching malls.');
             }
         });
+    }
+
+    const editMedia = (event , id) => {
+        event.stopPropagation();
+        window.location.href="admin/edit-media/"+id;
     }
 
         </script>

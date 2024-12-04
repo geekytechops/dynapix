@@ -103,6 +103,22 @@ const getSingleMallEditDetailsController = async (pageId, res) => {
     }
 };
 
+const deleteSingleMallController = async (mallId, res) => {
+    try {
+        const deletionStatus = await MediaModel.deleteSingleMall(mallId);
+
+        if (!deletionStatus) {
+            return res.status(404).send('Mall not found or already deleted');
+        }
+
+        res.redirect('/'); // Redirect to home page after successful deletion
+    } catch (error) {
+        console.error('Error deleting mall:', error.message);
+        res.status(500).send('Internal Server Error');
+    }
+};
+
+
 const addLobbyMediaController = async (req, res) => {
     const mdId = req.params.id; 
     const mediaData = req.body;
@@ -151,4 +167,4 @@ const getMallDetailsController = async (isLoggedin,page, res) => {
     }
 };
 
-module.exports = { addMediaController , filterMallsController , addLobbyMediaController , updateMediaController,  getMallDetailsController ,getSingleMallDetailsController , getSingleMallEditDetailsController };
+module.exports = { addMediaController , filterMallsController , addLobbyMediaController , deleteSingleMallController , updateMediaController,  getMallDetailsController ,getSingleMallDetailsController , getSingleMallEditDetailsController };

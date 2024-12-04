@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path')
 const {addMediaController , updateMediaController} = require('../controllers/mediaController')
 const { redirectHtmlMiddleware, isAuthenticated } = require('../middlewares/routerMiddleware');
-const {getSingleMallEditDetailsController} = require('../controllers/mediaController')
+const {getSingleMallEditDetailsController , deleteSingleMallController} = require('../controllers/mediaController')
 
 router.get('/admin', (req, res) => {
     res.render('admin/index');
@@ -21,6 +21,14 @@ router.get('/admin/edit-media/:id' , isAuthenticated , async (req, res) => {
     let pageId = req.params.id; 
     return await getSingleMallEditDetailsController(pageId, res);
 })
+router.post('/admin/delete-media', async (req, res) => {
+    const mallId = req.body.id; // Fetch the ID from the request body
+    if (!mallId) {
+        return res.status(400).send('Mall ID is required');
+    }
+
+    await deleteSingleMallController(mallId, res);
+});
 
 router.get('/admin/:page',isAuthenticated, (req, res) => {
     const page = req.params.page; 

@@ -67,6 +67,19 @@ const MediaModel = {
         });
     },
 
+    deleteSingleMall: (mallId) => {
+        return new Promise((resolve, reject) => {
+            const query = "DELETE FROM dypx_media_data WHERE md_id = ?";
+            db.query(query, [mallId], (err, results) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(results.affectedRows > 0); // Returns true if a row was deleted
+            });
+        });
+    },
+    
+
     updateMedia: (mediaId, mediaData) => {
         console.log(mediaData.md_type)
         console.log(mediaId)

@@ -24,6 +24,7 @@
       border: none;
       border-radius: 10px;
       box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.8);
+      position: relative;
     }
     .form-control {
       background-color: #444;
@@ -51,75 +52,118 @@
     .additional-fields {
       display: none;
     }
+    #deleteMedia {
+      z-index: 1000;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: #ff4444;
+      border: none;
+      color: white;
+      border-radius: 5px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    #deleteMedia:hover {
+      background-color: #cc0000;
+    }
   </style>
 </head>
 <body>
-    <div class="card">
-        <h3 class="text-center mb-4">Edit Media Information</h3>
-        <form id="editMediaForm">
-          <input type="hidden" id="mediaId" name="mediaId" value="<%= mall.md_id %>">
-          <div class="mb-3">
-            <label for="mediaType" class="form-label">Media Type</label>
-            <select name="mediaType" id="mediaType" class="form-select">
-              <option value="Mall" <%= mall.md_type === 'Mall' ? 'selected' : '' %>>Mall</option>
-              <option value="Theatre" <%= mall.md_type === 'Theatre' ? 'selected' : '' %>>Theatre</option>
-              <option value="Fuel Station" <%= mall.md_type === 'Fuel Station' ? 'selected' : '' %>>Fuel Station</option>
-            </select>
-          </div>
-          <div class="mb-3">
-            <label for="mediaTitle" class="form-label">Media Title</label>
-            <input type="text" class="form-control" id="mediaTitle" name="mediaTitle" value="<%= mall.md_name %>" required>
-          </div>
-          <div class="mb-3">
-            <label for="mediaImage" class="form-label">Media Image</label>
-            <img src="../../<%= mall.md_image ? mall.md_image : 'images/default.jpg' %>" alt="Current Image" class="img-thumbnail mb-2">
-            <input type="file" class="form-control" id="mediaImage" name="mediaImage" accept="image/*">
-            <input type="hidden" name="existingImage" value="<%= mall.md_image %>">
-          </div>
-          <div class="mb-3">
-            <label for="mediaDescription" class="form-label">Media Description</label>
-            <textarea class="form-control" id="mediaDescription" name="mediaDescription" rows="3" required><%= mall.md_description %></textarea>
-          </div>
-          <div class="mb-3">
-            <label for="mediaLocation" class="form-label">Media Location</label>
-            <textarea class="form-control" id="mediaLocation" name="mediaLocation" required><%= mall.md_location %></textarea>
-          </div>
-          <div class="row">
-            <div class="col-md-6 mb-3">
-              <label for="mediaFootfalls" class="form-label">Approximate Footfalls</label>
-              <input type="number" class="form-control" id="mediaFootfalls" name="mediaFootfalls" value="<%= mall.md_footfalls %>" required>
-            </div>
-            <div class="col-md-6 mb-3">
-              <label for="mediaDuration" class="form-label">Media Duration (in seconds)</label>
-              <input type="number" class="form-control" id="mediaDuration" name="mediaDuration" value="<%= mall.md_duration %>" required>
-            </div>
-          </div>
-          <button type="submit" class="btn btn-primary w-100">Update Media Information</button>
-        </form>
+  <div class="card">
+    <!-- Delete Button -->
+    <button id="deleteMedia" class="btn btn-danger position-absolute top-0 end-0 m-2">
+      <i class="fas fa-trash-alt"></i> Delete
+    </button>
+
+    <h3 class="text-center mb-4">Edit Media Information</h3>
+    <form id="editMediaForm">
+      <input type="hidden" id="mediaId" name="mediaId" value="<%= mall.md_id %>">
+      <div class="mb-3">
+        <label for="mediaType" class="form-label">Media Type</label>
+        <select name="mediaType" id="mediaType" class="form-select">
+          <option value="Mall" <%= mall.md_type === 'Mall' ? 'selected' : '' %>>Mall</option>
+          <option value="Theatre" <%= mall.md_type === 'Theatre' ? 'selected' : '' %>>Theatre</option>
+          <option value="Fuel Station" <%= mall.md_type === 'Fuel Station' ? 'selected' : '' %>>Fuel Station</option>
+        </select>
       </div>
-      
-      <script>
-        $('#editMediaForm').submit(function (e) {
-          e.preventDefault();
-        
-          let formData = new FormData(this);
-      
-          $.ajax({
-            url: '/update-media', // API endpoint to update media
+      <div class="mb-3">
+        <label for="mediaTitle" class="form-label">Media Title</label>
+        <input type="text" class="form-control" id="mediaTitle" name="mediaTitle" value="<%= mall.md_name %>" required>
+      </div>
+      <div class="mb-3">
+        <label for="mediaImage" class="form-label">Media Image</label>
+        <img src="../../<%= mall.md_image ? mall.md_image : 'images/default.jpg' %>" alt="Current Image" class="img-thumbnail mb-2">
+        <input type="file" class="form-control" id="mediaImage" name="mediaImage" accept="image/*">
+        <input type="hidden" name="existingImage" value="<%= mall.md_image %>">
+      </div>
+      <div class="mb-3">
+        <label for="mediaDescription" class="form-label">Media Description</label>
+        <textarea class="form-control" id="mediaDescription" name="mediaDescription" rows="3" required><%= mall.md_description %></textarea>
+      </div>
+      <div class="mb-3">
+        <label for="mediaLocation" class="form-label">Media Location</label>
+        <textarea class="form-control" id="mediaLocation" name="mediaLocation" required><%= mall.md_location %></textarea>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label for="mediaFootfalls" class="form-label">Approximate Footfalls</label>
+          <input type="number" class="form-control" id="mediaFootfalls" name="mediaFootfalls" value="<%= mall.md_footfalls %>" required>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="mediaDuration" class="form-label">Media Duration (in seconds)</label>
+          <input type="number" class="form-control" id="mediaDuration" name="mediaDuration" value="<%= mall.md_duration %>" required>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary w-100">Update Media Information</button>
+    </form>
+  </div>
+
+  <script>
+    // Handle Update
+    $('#editMediaForm').submit(function (e) {
+      e.preventDefault();
+
+      let formData = new FormData(this);
+
+      $.ajax({
+        url: '/update-media', // API endpoint to update media
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          alert('Media updated successfully!');
+          window.location.href = '/'; // Redirect after update
+        },
+        error: function (xhr) {
+          alert('Failed to update media: ' + xhr.responseText);
+        },
+      });
+    });
+
+    // Handle Delete
+// Delete button AJAX 
+$('#deleteMedia').click(function () {
+    const mallId = $('#mediaId').val(); // Fetch the mall ID from a hidden input field or context
+
+    if (confirm('Are you sure you want to delete this media?')) {
+        $.ajax({
+            url: '/admin/delete-media',
             type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function (response) {
-              alert('Media updated successfully!');
-              window.location.href = '/'; // Redirect after update
+            data: { id: mallId },
+            success: function () {
+                alert('Media deleted successfully!');
+                window.location.href = '/'; // Redirect to home after deletion
             },
             error: function (xhr) {
-              alert('Failed to update media: ' + xhr.responseText);
+                alert('Failed to delete media: ' + xhr.responseText);
             },
-          });
         });
-      </script>
-      
+    }
+});
+
+  </script>
 </body>
 </html>
