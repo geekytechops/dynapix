@@ -19,6 +19,55 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <style>
 
+.title {
+    position: relative;
+    display: inline-block;
+}
+.wrap {
+    position: relative; /* Parent container for positioning */
+    display: inline-block; /* Adjust display to fit content */
+    width: 300px; /* Example width */
+    margin: 10px; /* Spacing */
+    border-radius: 8px; /* Optional styling */
+    overflow: hidden; /* Ensure the edit button stays inside */
+    color:#fff;
+}
+.title{
+    color:#fff;
+}
+
+.wrap img {
+    width: 100%;
+    height: auto;
+}
+
+.content {
+    padding: 10px;
+}
+
+.edit-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+    border: none;
+    border-radius: 50%; /* Circle shape */
+    padding: 8px;
+    cursor: pointer;
+    z-index: 10; /* Ensure it overlays other content */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional shadow */
+    transition: transform 0.2s ease;
+}
+
+.edit-icon:hover {
+    transform: scale(1.1); /* Slight zoom on hover */
+}
+
+.edit-icon i {
+    font-size: 16px; /* Adjust icon size */
+    color: #333; /* Icon color */
+}
+
 #popup-body .stats{
     display:none;
 } 
@@ -207,7 +256,8 @@
                         <div class="mediawrap">                           
                             <% if (mallData.length > 0) { %>
                                 <% mallData.forEach((mall) => { %>
-                                    <a href="javascript:void(0)" class="wrap" id="media_<%= mall.md_id %>">
+                                    <div class="wrap" id="media_<%= mall.md_id %>">
+                                    <a href="javascript:void(0)" id="media_<%= mall.md_id %>">
                                     <!-- <a href="/fuel-station/<%= mall.md_id || '#' %>" class="wrap" id="media_<%= mall.md_id %>"> -->
                                         <img src="./<%= mall.md_image || 'images/default.jpg' %>">
                                         <div class="content">
@@ -218,6 +268,10 @@
                                             </div>
                                         </div>
                                     </a>
+                                    <button class="edit-icon" title="Edit" onclick="editMedia(event, '<%= mall.md_id || '/' %>')">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </div>
                                 <% }); %>
                             <% } else { %>
                                 <p>No Fuel Stations found.</p>
@@ -379,6 +433,10 @@
     });
 });
 
+const editMedia = (event , id) => {
+        event.stopPropagation();
+        window.location.href="admin/edit-media/"+id;
+    }
         </script>
         
     </body>
