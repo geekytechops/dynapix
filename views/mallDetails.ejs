@@ -512,7 +512,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 if (response.ok) {
                     alert("Media deleted successfully!");
-                    
+                    location.reload();
                 } else {
                     const errorData = await response.json();
                     alert(`Error: ${errorData.message}`);
