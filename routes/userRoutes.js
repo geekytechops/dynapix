@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path')
 const session = require('express-session');
 const {getMallDetailsController , getSingleMallDetailsController , filterMallsController} = require('../controllers/mediaController')
-const { addLobbyMediaController} = require('../controllers/mediaController')
+const { addLobbyMediaController , deleteLobbyMediaController} = require('../controllers/mediaController')
 
 router.use(session({
     secret: 'your_secret_key',
@@ -36,6 +36,9 @@ router.get('/fuel-station/:id', async (req, res) => {
     pagename='Fuel Station';
         return await getSingleMallDetailsController(isLoggedin,pageId,pagename, res);
 });
+
+
+router.post('/delete-media/:id', deleteLobbyMediaController);
 
 router.post('/add-lobby-media/:id', addLobbyMediaController);
 

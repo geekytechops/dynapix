@@ -22,6 +22,22 @@
     display:none;
 } 
 
+.delete-button {
+    background-color: rgba(255, 0, 0, 0.7); /* Semi-transparent red */
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    cursor: pointer;
+    z-index: 10; /* Ensure it overlays the content */
+    transition: background-color 0.3s ease;
+}
+
+.delete-button:hover {
+    background-color: rgba(255, 0, 0, 0.9); /* Darker red on hover */
+}
+
             .wrap {
     position: relative;
     overflow: hidden;
@@ -219,10 +235,6 @@
                     </div>
 
                     <div class="row">
-                        <!-- <div class="col-md-6 mb-3">
-                        <label for="mediaType" class="form-label">Type</label>
-                        <input type="text" class="form-control" id="mediaType" name="mediaType" value="" readonly>
-                        </div> -->
                         <div class="col-md-4 mb-3">
                         <label for="mediaSize" class="form-label">Size</label>
                         <input type="text" class="form-control" id="mediaSize" name="mediaSize" value="" required>
@@ -236,16 +248,6 @@
                             <input type="number" class="form-control" id="mediaSlots" name="mediaSlots" value="" required>
                           </div>
                     </div>
-                    <!-- <div class="row">
-                      <div class="col-md-6 mb-3">
-                        <label for="mediaScreens" class="form-label">No. of Screens</label>
-                        <input type="number" class="form-control" id="mediaScreens" name="mediaScreens" value="" required>
-                      </div>
-                      <div class="col-md-6 mb-3">
-                        <label for="mediaSlots" class="form-label">No. of Slots</label>
-                        <input type="number" class="form-control" id="mediaSlots" name="mediaSlots" value="" required>
-                      </div>
-                    </div> -->
                     <div class="row">
                       <div class="col-md-4 mb-3">
                         <label for="mediaDuration" class="form-label">Duration</label>
@@ -329,10 +331,10 @@
                             <% } %>
                            </span></h3>
 
-                          <!-- Loop through the locations and display their content -->
+                          
 <% if (locations.length > 0) { %>
     <% locations.forEach(location => { %>
-        <div class="wrap">
+        <div class="wrap position-relative">
             <img src="../<%= location.md_ad_image || 'images/default.jpg' %>" alt="Image for <%= location.type %>">
             <div class="content">
                 <h2 class="title"><%= location.md_ad_name %></h2>
@@ -346,151 +348,20 @@
                     <div class="wrap">Approx Footfalls: <span><%= location.md_ad_footfalls %></span></div>
                 </div>
             </div>
+            <% if (isLoggedin) { %>
+                <button 
+                    class="btn btn-danger position-absolute delete-button" 
+                    data-id="<%= location.md_ad_id %>"
+                    style="top: 10px; right: 10px;"
+                >
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+            <% } %>
         </div>
     <% }); %>
-<% } %>
     
-
-                            <!-- <div class="wrap">
-                                <img src="../images/inventory/inv-fcm-1.jpeg">
-                                <div class="content">
-                                    <h2 class="title">Lobby</h2>
-                                    <div class="stats full">
-                                        <div class="wrap">Type: Digital</div>
-                                        <div class="wrap">Size: 35ft x 5ft</div>
-                                        <div class="wrap">No. of Screens: 1</div>
-                                        <div class="wrap">No. of Slots: 240</div>
-                                        <div class="wrap">Duration: 10sec</div>
-                                        <div class="wrap">Loop Time: 3min</div>
-                                        <div class="wrap">Approx Footfalls: <span>3-3.5 Lacs</span></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="wrap">
-                                <img src="../images/inventory/inv-fcm-2.jpeg">
-                                <div class="content">
-                                    <h2 class="title">Lift Entry & Exit</h2>
-                                    <div class="stats full">
-                                        <div class="wrap">Type: Digital</div>
-                                        <div class="wrap">Size: 15ft x 3ft</div>
-                                        <div class="wrap">No. of Screens: 1</div>
-                                        <div class="wrap">No. of Slots: 240</div>
-                                        <div class="wrap">Duration: 10sec</div>
-                                        <div class="wrap">Loop Time: 3min</div>
-                                        <div class="wrap">Approx Footfalls: <span>3-3.5 Lacs</span></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="wrap">
-                                <img src="../images/inventory/inv-fcm-3.jpeg">
-                                <div class="content">
-                                    <h2 class="title">Escalator - 1</h2>
-                                    <div class="stats full">
-                                        <div class="wrap">Type: Digital</div>
-                                        <div class="wrap">Size: 3ft x 5ft</div>
-                                        <div class="wrap">No. of Screens: 1</div>
-                                        <div class="wrap">No. of Slots: 240</div>
-                                        <div class="wrap">Duration: 10sec</div>
-                                        <div class="wrap">Loop Time: 3min</div>
-                                        <div class="wrap">Approx Footfalls: <span>3-3.5 Lacs</span></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="wrap">
-                                <img src="../images/inventory/inv-fcm-3.jpeg">
-                                <div class="content">
-                                    <h2 class="title">Escalator - 2</h2>
-                                    <div class="stats full">
-                                        <div class="wrap">Type: Digital</div>
-                                        <div class="wrap">Size: 3ft x 5ft</div>
-                                        <div class="wrap">No. of Screens: 1</div>
-                                        <div class="wrap">No. of Slots: 240</div>
-                                        <div class="wrap">Duration: 10sec</div>
-                                        <div class="wrap">Loop Time: 3min</div>
-                                        <div class="wrap">Approx Footfalls: <span>3-3.5 Lacs</span></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="wrap">
-                                <img src="../images/inventory/inv-fcm-3.jpeg">
-                                <div class="content">
-                                    <h2 class="title">Escalator - 3</h2>
-                                    <div class="stats full">
-                                        <div class="wrap">Type: Digital</div>
-                                        <div class="wrap">Size: 3ft x 5ft</div>
-                                        <div class="wrap">No. of Screens: 1</div>
-                                        <div class="wrap">No. of Slots: 240</div>
-                                        <div class="wrap">Duration: 10sec</div>
-                                        <div class="wrap">Loop Time: 3min</div>
-                                        <div class="wrap">Approx Footfalls: <span>3-3.5 Lacs</span></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="wrap">
-                                <img src="../images/inventory/inv-fcm-3.jpeg">
-                                <div class="content">
-                                    <h2 class="title">Escalator - 4</h2>
-                                    <div class="stats full">
-                                        <div class="wrap">Type: Digital</div>
-                                        <div class="wrap">Size: 3ft x 5ft</div>
-                                        <div class="wrap">No. of Screens: 1</div>
-                                        <div class="wrap">No. of Slots: 240</div>
-                                        <div class="wrap">Duration: 10sec</div>
-                                        <div class="wrap">Loop Time: 3min</div>
-                                        <div class="wrap">Approx Footfalls: <span>3-3.5 Lacs</span></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="wrap">
-                                <img src="../images/inventory/inv-fcm-3.jpeg">
-                                <div class="content">
-                                    <h2 class="title">Escalator - 5</h2>
-                                    <div class="stats full">
-                                        <div class="wrap">Type: Digital</div>
-                                        <div class="wrap">Size: 3ft x 5ft</div>
-                                        <div class="wrap">No. of Screens: 1</div>
-                                        <div class="wrap">No. of Slots: 240</div>
-                                        <div class="wrap">Duration: 10sec</div>
-                                        <div class="wrap">Loop Time: 3min</div>
-                                        <div class="wrap">Approx Footfalls: <span>3-3.5 Lacs</span></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="wrap">
-                                <img src="../images/inventory/inv-fcm-3.jpeg">
-                                <div class="content">
-                                    <h2 class="title">Escalator - 6</h2>
-                                    <div class="stats full">
-                                        <div class="wrap">Type: Digital</div>
-                                        <div class="wrap">Size: 3ft x 5ft</div>
-                                        <div class="wrap">No. of Screens: 1</div>
-                                        <div class="wrap">No. of Slots: 240</div>
-                                        <div class="wrap">Duration: 10sec</div>
-                                        <div class="wrap">Loop Time: 3min</div>
-                                        <div class="wrap">Approx Footfalls: <span>3-3.5 Lacs</span></div>
-                                    </div>
-                                </div>
-                            </div> -->
-                            <!-- <div class="wrap position-relative"> -->
-                                <!-- Edit Button Overlay -->
-                                <!-- <button class="edit-button btn btn-primary btn-sm position-absolute">
-                                    <i class="fas fa-edit"></i> Edit
-                                </button> -->
-                            
-                                <!-- <img src="../images/inventory/inv-fcm-4.jpeg" alt="Mall Image">
-                                <div class="content">
-                                    <h2 class="title">Mall outside big</h2>
-                                    <div class="stats full">
-                                        <div class="wrap">Type: Digital</div>
-                                        <div class="wrap">Size: 30ft x 20ft</div>
-                                        <div class="wrap">No. of Screens: 1</div>
-                                        <div class="wrap">No. of Slots: 240</div>
-                                        <div class="wrap">Duration: 10sec</div>
-                                        <div class="wrap">Loop Time: 3min</div>
-                                        <div class="wrap">Approx Footfalls: <span>3-3.5 Lacs</span></div>
-                                    </div>
-                                </div>
-                            </div> -->
+<% } %>
+                               
                             
                         </div>
                     </div>
@@ -576,21 +447,12 @@
                 $("#btnclose").trigger("click");
             })
 
-            // // Get the current URL
-            // const currentUrl = window.location.href;
-
-            // // Extract the number from the URL using a regular expression
-            // const match = currentUrl.match(/\/(\d+)$/);
-
-            // // Extracted number or null if not found
-            // const extractedNumber = match ? parseInt(match[1], 10) : null;
-
             document.getElementById('lobbyMediaForm').addEventListener('submit', async function (e) {
                 e.preventDefault();
 
                 const formData = new FormData(this);
                 const urlSegments = window.location.pathname.split('/');
-                const mdId = urlSegments[urlSegments.length - 1]; // Extract last ID from URL
+                const mdId = urlSegments[urlSegments.length - 1]; 
 
                 try {
                     const response = await fetch(`/add-lobby-media/${mdId}`, {
@@ -610,34 +472,65 @@
                 }
                 });
 
-                document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {
     const wraps = document.querySelectorAll(".wrap");
     const popup = document.getElementById("popup");
     const popupBody = document.getElementById("popup-body");
     const closeBtn = document.querySelector(".close-btn");
 
     wraps.forEach((wrap) => {
-        wrap.addEventListener("click", () => {
+        wrap.addEventListener("click", (e) => {
+
+            if (e.target.classList.contains("delete-button") || e.target.closest(".delete-button")) {
+                return;
+            }
+
             const imageSrc = wrap.querySelector("img").getAttribute("src");
             const contentHTML = wrap.querySelector(".content").innerHTML;
 
-            // Set popup content
+            
             popupBody.innerHTML = `
                 <img src="${imageSrc}" alt="Popup Image">
                 ${contentHTML}
             `;
 
-            // Show popup
             popup.style.display = "flex";
         });
     });
 
-    // Close popup
+    document.querySelectorAll(".delete-button").forEach((button) => {
+    button.addEventListener("click", async (e) => {
+        e.stopPropagation(); 
+
+        const mediaId = button.getAttribute("data-id");
+
+        if (confirm("Are you sure you want to delete this media?")) {
+            try {
+                const response = await fetch(`/delete-media/${mediaId}`, {
+                    method: "POST", 
+                });
+
+                if (response.ok) {
+                    alert("Media deleted successfully!");
+                    
+                } else {
+                    const errorData = await response.json();
+                    alert(`Error: ${errorData.message}`);
+                }
+            } catch (error) {
+                console.error("Error deleting media:", error);
+                alert("An error occurred while deleting media.");
+            }
+        }
+    });
+});
+
+
     closeBtn.addEventListener("click", () => {
         popup.style.display = "none";
     });
 
-    // Close popup when clicking outside the content
+    
     popup.addEventListener("click", (e) => {
         if (e.target === popup) {
             popup.style.display = "none";

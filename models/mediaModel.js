@@ -271,7 +271,19 @@ const MediaModel = {
                 resolve(result);
             });
         });
-    }
+    },
+deleteLobbyMedia: (mdId) => {
+    return new Promise((resolve, reject) => {
+        const query = `DELETE FROM dypx_media_ad_location WHERE md_ad_id = ?`;
+        db.query(query, [mdId], (err, result) => {
+            if (err) return reject(err);
+            resolve(result);
+        });
+    });
+}
+
 };
+
+
 
 module.exports = MediaModel;
