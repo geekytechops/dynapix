@@ -22,7 +22,7 @@
     display:none;
 } 
 
-.delete-button {
+.editlobby-button , .delete-button {
     background-color: rgba(255, 0, 0, 0.7); /* Semi-transparent red */
     color: #fff;
     border: none;
@@ -34,7 +34,7 @@
     transition: background-color 0.3s ease;
 }
 
-.delete-button:hover {
+.editlobby-button, .delete-button:hover {
     background-color: rgba(255, 0, 0, 0.9); /* Darker red on hover */
 }
 
@@ -161,6 +161,17 @@
     background-color: rgba(0, 0, 0, 0.9); /* Darker background on hover */
 }
 
+.delete-button:hover {
+    background: linear-gradient(45deg, #00aad1, #fb339d);
+    padding: 10px 30px;
+    border-radius: 25px;
+    font-size: 18px;
+    font-weight: 500;
+    color: #fff;
+    display: inline-block;
+    border: 0;
+}
+
         </style>
     </head>
     
@@ -261,10 +272,13 @@
                         <label for="mediaFootfalls" class="form-label">Approx Footfalls</label>
                         <input type="text" class="form-control" id="mediaFootfalls" name="mediaFootfalls" value="" required>
                       </div>
+                      <input type="hidden" name="dataUpdateId" id="dataUpdateId" value="0">
                     </div>
                   </form>
                 </div>
                 <div class="modal-footer">
+                    <input type="hidden" name="dataUpdateType" id="dataUpdateType" value="0">
+                   
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                   <button type="submit" form="lobbyMediaForm" class="btn btn-primary">Save Changes</button>
                 </div>
@@ -327,7 +341,7 @@
                            <h3 class="subtitle d-flex align-items-center justify-content-between"><span class="headingbg">Screen Location</span><span> 
                             <% if(isLoggedin){ %>
                              
-                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mediaModal">Add Media Location</button>
+                            <button class="btn btn-primary" data-bs-toggle="modal" id="modelPopupBtn" data-bs-target="#mediaModal">Add Media Location</button>
                             <% } %>
                            </span></h3>
 
@@ -350,12 +364,19 @@
             </div>
             <% if (isLoggedin) { %>
                 <button 
-                    class="btn btn-danger position-absolute delete-button" 
+                    class="btn btn-danger position-absolute editlobby-button" 
                     data-id="<%= location.md_ad_id %>"
-                    style="top: 10px; right: 10px;"
-                >
-                    <i class="fas fa-trash"></i> Delete
+                    style="top: 10px; left: 10px;"
+                    onclick="editLocation('<%= location.md_ad_name %>', '<%= location.md_ad_type %>', '<%= location.md_ad_size %>', '<%= location.md_ad_num_screen %>', '<%= location.md_ad_num_slots %>', '<%= location.md_ad_num_duration %>', '<%= location.md_ad_looptime %>', '<%= location.md_ad_footfalls %>', '<%= location.md_ad_id %>',event)">
+                    <i class="fas fa-trash"></i> Edit
                 </button>
+                <button 
+                class="btn btn-danger position-absolute delete-button" 
+                data-id="<%= location.md_ad_id %>"
+                style="top: 10px; right: 10px;"
+            >
+                <i class="fas fa-trash"></i> Delete
+            </button>
             <% } %>
         </div>
     <% }); %>
@@ -450,7 +471,31 @@
             document.getElementById('lobbyMediaForm').addEventListener('submit', async function (e) {
                 e.preventDefault();
 
-                const formData = new FormData(this);
+                if($('#dataUpdateType').val()==1){
+
+                    const formData = new FormData(this);
+                const urlSegments = window.location.pathname.split('/');
+                const mdId = urlSegments[urlSegments.length - 1]; 
+
+                try {
+                    const response = await fetch(`/edit-lobby-media/${mdId}`, {
+                    method: 'POST',
+                    body: formData,
+                    });
+
+                    if (response.ok) {
+                    alert('Lobby media Updated successfully!');
+                    location.reload();
+                    } else {
+                    const errorData = await response.json();
+                    alert(`Error: ${errorData.message}`);
+                    }
+                } catch (error) {
+                    alert(`Error: ${error.message}`);
+                }
+
+                }else{
+                    const formData = new FormData(this);
                 const urlSegments = window.location.pathname.split('/');
                 const mdId = urlSegments[urlSegments.length - 1]; 
 
@@ -470,6 +515,9 @@
                 } catch (error) {
                     alert(`Error: ${error.message}`);
                 }
+                }
+
+               
                 });
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -526,6 +574,8 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
+
+
     closeBtn.addEventListener("click", () => {
         popup.style.display = "none";
     });
@@ -539,8 +589,25 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
+
+const editLocation = (md_ad_name, md_ad_type, md_ad_size, md_ad_num_screen, md_ad_num_slots, md_ad_num_duration, md_ad_looptime, md_ad_footfalls, md_ad_id, e) => {
+        e.stopPropagation();  
+        $('#mediaName').val(md_ad_name);
+        $('#mediaSize').val(md_ad_size);
+        $('#mediaScreens').val(md_ad_num_screen);
+        $('#mediaSlots').val(md_ad_num_slots);
+        $('#mediaDuration').val(md_ad_num_duration);
+        $('#mediaFootfalls').val(md_ad_footfalls);
+        $('#mediaLoopTime').val(md_ad_looptime);
+        $('#dataUpdateType').val(1);
+        $('#dataUpdateId').val(md_ad_id);
+
+        $('#modelPopupBtn').trigger('click');
+    }
+    
+
         </script>
         
     </body>
-
+  
 </html>

@@ -272,6 +272,70 @@ const MediaModel = {
             });
         });
     },
+    editLobbyMedia: (mdId, mediaData) => {
+        return new Promise((resolve, reject) => {
+            const {
+                mediaName,    
+                mediaType,    
+                mediaSize, 
+                mediaScreens, 
+                mediaSlots,    
+                mediaDuration,
+                mediaLoopTime,
+                mediaFootfalls ,
+                dataUpdateId
+            } = mediaData;
+    
+            // Log the data to ensure it's being passed correctly
+            console.log("Data received for update:", mediaData);
+    
+            // Build the query to update the media data (no image update)
+            const query = `
+                UPDATE dypx_media_ad_location 
+                SET 
+                    md_ad_name = ?, 
+                    md_ad_type = ?, 
+                    md_ad_size = ?, 
+                    md_ad_num_screen = ?, 
+                    md_ad_num_slots = ?, 
+                    md_ad_num_duration = ?, 
+                    md_ad_footfalls = ?, 
+                    md_ad_looptime = ?
+                WHERE md_ad_id = ?
+            `;
+    
+            const values = [
+                mediaName,
+                mediaType,
+                mediaSize,
+                mediaScreens,
+                mediaSlots,
+                mediaDuration,
+                mediaFootfalls,
+                mediaLoopTime,
+                dataUpdateId // Using mdId as the where condition
+            ];
+    
+            // Log the query and values to ensure they are correct
+            console.log("Query:", query);
+            console.log("Values:", dataUpdateId);
+    
+            // Execute the query
+            db.query(query, values, (err, result) => {
+                if (err) {
+                    console.error("Error executing the query:", err);
+                    return reject(err);
+                }
+                if (result.affectedRows === 0) {
+                    console.log("No rows were updated. Ensure the mdId exists and is correct.");
+                    return reject(new Error("No rows were updated. Ensure the mdId exists and is correct."));
+                }
+                console.log("Update successful:", result);
+                resolve(result);
+            });
+        });
+    }
+,    
 deleteLobbyMedia: (mdId) => {
     return new Promise((resolve, reject) => {
         const query = `DELETE FROM dypx_media_ad_location WHERE md_ad_id = ?`;

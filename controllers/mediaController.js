@@ -116,6 +116,19 @@ const addLobbyMediaController = async (req, res) => {
     }
   };
 
+  const editLobbyMediaController = async (req, res) => {
+    const mdId = req.params.id; 
+    const mediaData = req.body;
+    const mediaImage = req.files ? req.files.mediaImage : null;
+  
+    try {
+      const result = await MediaModel.editLobbyMedia(mdId, mediaData, mediaImage);
+      res.status(200).json({ message: 'Lobby media added successfully.', result });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  };
+
 const addMediaController = async (req, res) => {
 
     const mediaData = req.body;
@@ -164,4 +177,4 @@ const deleteLobbyMediaController = async (req, res) => {
 };
 
 
-module.exports = { addMediaController , filterMallsController , addLobbyMediaController ,deleteLobbyMediaController , updateMediaController,  getMallDetailsController ,getSingleMallDetailsController , getSingleMallEditDetailsController };
+module.exports = { addMediaController , filterMallsController , editLobbyMediaController , addLobbyMediaController ,deleteLobbyMediaController , updateMediaController,  getMallDetailsController ,getSingleMallDetailsController , getSingleMallEditDetailsController };
