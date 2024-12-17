@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs');
 const path = require('path')
-const {addMediaController , updateMediaController} = require('../controllers/mediaController')
+const {addMediaController , updateMediaController , addCampaignController} = require('../controllers/mediaController')
 const { redirectHtmlMiddleware, isAuthenticated } = require('../middlewares/routerMiddleware');
 const {getSingleMallEditDetailsController , deleteSingleMallController} = require('../controllers/mediaController')
 
@@ -46,6 +46,7 @@ router.get('/admin/:page',isAuthenticated, (req, res) => {
 });
 
 router.post('/add-media', addMediaController);
+router.post('/add-campaign', addCampaignController);
 router.post('/update-media', updateMediaController);
 
 module.exports = router;

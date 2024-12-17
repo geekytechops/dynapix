@@ -142,6 +142,19 @@ const addMediaController = async (req, res) => {
     }
 };
 
+const addCampaignController = async (req, res) => {
+
+    const mediaData = req.body;
+    const mediaImage = req.files ? req.files.mediaImage : null;
+
+    try {
+        const result = await MediaModel.addCampaign(mediaData, mediaImage);
+        res.status(200).json({ message: 'Campaign data inserted successfully.', result });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 const getMallDetailsController = async (isLoggedin,page, res) => {
        try {
         const mallDetails = await MediaModel.getMallDetails(page); 
@@ -177,4 +190,4 @@ const deleteLobbyMediaController = async (req, res) => {
 };
 
 
-module.exports = { addMediaController , filterMallsController , editLobbyMediaController , addLobbyMediaController ,deleteLobbyMediaController , updateMediaController,  getMallDetailsController ,getSingleMallDetailsController , getSingleMallEditDetailsController };
+module.exports = { addMediaController , addCampaignController , filterMallsController , editLobbyMediaController , addLobbyMediaController ,deleteLobbyMediaController , updateMediaController,  getMallDetailsController ,getSingleMallDetailsController , getSingleMallEditDetailsController };

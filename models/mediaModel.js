@@ -199,7 +199,116 @@ const MediaModel = {
             });
         });
     },
-
+    addCampaign: (mediaData, mediaImages) => {
+        return new Promise((resolve, reject) => {
+            const {
+                mediaType,
+                mediaTitle,
+                mediaDescription,
+            } = mediaData;
+    
+            const status = 0;
+            let imagePaths = [];
+    
+            if (mediaImages && Array.isArray(mediaImages)) {
+                const uploadDir = path.join(__dirname, '../uploads/');
+    
+                // Create the uploads directory if it doesn't exist
+                if (!fs.existsSync(uploadDir)) {
+                    fs.mkdirSync(uploadDir, { recursive: true });
+                }
+    
+                const validExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+    
+                const uploadPromises = mediaImages.map((mediaImage) => {
+                    return new Promise((resolve, reject) => {
+                        const timestamp = Date.now();
+                        const originalName = mediaImage.name.replace(/\s+/g, '_');
+                        const uniqueName = `${timestamp}_${originalName}`;
+    
+                        const targetFile = path.join(uploadDir, uniqueName);
+                        const relativeImagePath = `uploads/${uniqueName}`;
+    
+                        const fileExtension = path.extname(mediaImage.name).toLowerCase();
+    
+                        // Check for valid file extension
+                        if (!validExtensions.includes(fileExtension.substring(1))) {
+                            return reject(new Error('Only JPG, JPEG, PNG, and GIF files are allowed.'));
+                        }
+    
+                        // Move the file to the target location
+                        mediaImage.mv(targetFile, (err) => {
+                            if (err) {
+                                return reject(new Error('Error uploading the file.'));
+                            }
+    
+                            // Add the relative path to the imagePaths array
+                            imagePaths.push(relativeImagePath);
+                            resolve();
+                        });
+                    });
+                });
+    
+                // Wait for all image uploads to complete
+                Promise.all(uploadPromises)
+                    .then(() => {
+                        // Insert the data into the database once all images are uploaded
+                        const query = `
+                            INSERT INTO dypx_campaign_data 
+                            (campaign_title,campaign_type, campaign_desc, campaign_images) 
+                            VALUES (?, ?, ?, ?)
+                        `;
+    
+                        const values = [
+                            mediaTitle,
+                            mediaType,
+                            mediaDescription,
+                            JSON.stringify(imagePaths), // Store image paths as JSON string                            
+                        ];
+    
+                        db.query(query, values, (err, result) => {
+                            if (err) return reject(err);
+                            resolve(result);
+                        });
+                    })
+                    .catch((err) => {
+                        console.error(err);
+                        return reject(err);
+                    });
+            } 
+            // else {
+            //     // No images provided, insert the data without image paths
+            //     const query = `
+            //         INSERT INTO dypx_media_data 
+            //         (md_name, md_location_type, md_location, md_image, md_description, md_footfalls, md_duration, 
+            //          md_num_slots, md_num_screens, md_size, 
+            //          md_looptime, md_status) 
+            //         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            //     `;
+    
+            //     const values = [
+            //         mediaTitle,
+            //         mediaType,
+            //         mediaLocation,
+            //         null, // No images
+            //         mediaDescription,
+            //         mediaFootfalls,
+            //         mediaDuration,
+            //         mediaSlots,
+            //         mediaScreens,
+            //         mediaSize,
+            //         mediaLoopTime,
+            //         status,
+            //     ];
+    
+            //     db.query(query, values, (err, result) => {
+            //         if (err) return reject(err);
+            //         resolve(result);
+            //     });
+            // }
+        });
+    },
+    
     addLobbyMedia: (mdId, mediaData, mediaImage) => {
         return new Promise((resolve, reject) => {
             const {
