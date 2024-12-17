@@ -103,7 +103,7 @@ const MediaModel = {
                 mediaData.mediaLocation,   
                 mediaData.mediaFootfalls,
                 mediaData.mediaDuration,  
-                mediaData.mediaImage,      
+                mediaData.mediaImage,                      
                 mediaId,                  
             ];
             db.query(query, params, (err, result) => {
@@ -210,7 +210,8 @@ const MediaModel = {
                 mediaSlots,    
                 mediaDuration,
                 mediaLoopTime,
-                mediaFootfalls 
+                mediaFootfalls ,
+                mapLocation
             } = mediaData;
     
             let imagePath = null;
@@ -248,9 +249,9 @@ const MediaModel = {
             const query = `
                 INSERT INTO dypx_media_ad_location 
                 (md_id, md_ad_name, md_ad_size, md_ad_num_screen, md_ad_num_slots, 
-                 md_ad_num_duration, md_ad_footfalls, md_ad_looptime, md_ad_status, md_ad_image, 
+                 md_ad_num_duration, md_ad_footfalls, md_ad_looptime, md_ad_status, md_ad_image, md_ad_map_location,
                  md_ad_created_date) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, NOW())
             `;
     
             const values = [
@@ -264,6 +265,7 @@ const MediaModel = {
                 mediaLoopTime,
                 0, 
                 imagePath,
+                mapLocation
             ];
     
             db.query(query, values, (err, result) => {
@@ -283,6 +285,7 @@ const MediaModel = {
                 mediaDuration,
                 mediaLoopTime,
                 mediaFootfalls ,
+                mapLocation,
                 dataUpdateId
             } = mediaData;
     
@@ -300,7 +303,8 @@ const MediaModel = {
                     md_ad_num_slots = ?, 
                     md_ad_num_duration = ?, 
                     md_ad_footfalls = ?, 
-                    md_ad_looptime = ?
+                    md_ad_looptime = ?,
+                    md_ad_map_location = ?
                 WHERE md_ad_id = ?
             `;
     
@@ -313,6 +317,7 @@ const MediaModel = {
                 mediaDuration,
                 mediaFootfalls,
                 mediaLoopTime,
+                mapLocation,
                 dataUpdateId // Using mdId as the where condition
             ];
     

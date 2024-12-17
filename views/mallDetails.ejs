@@ -18,7 +18,9 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <style>
 
-#popup-body .stats{
+
+
+#popup-body .stats , #popup-body .map_button{
     display:none;
 } 
 
@@ -235,21 +237,22 @@
                 <div class="modal-body">
                   <form id="lobbyMediaForm">
                     <div class="row">
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-4 mb-3">
                             <label for="mediaName" class="form-label">Name</label>
                             <input type="text" class="form-control" id="mediaName" name="mediaName" value="" required>
                           </div>
-                          <div class="col-md-6 mb-3">
+                          <div class="col-md-4 mb-3">
                             <label for="mediaImage" class="form-label">Image</label>
                             <input type="file" class="form-control" id="mediaImage" name="mediaImage" accept="image/*">
                           </div>
+                          <div class="col-md-4 mb-3">
+                            <label for="mediaSize" class="form-label">Size</label>
+                            <input type="text" class="form-control" id="mediaSize" name="mediaSize" value="" required>
+                            </div>
                     </div>
 
                     <div class="row">
-                        <div class="col-md-4 mb-3">
-                        <label for="mediaSize" class="form-label">Size</label>
-                        <input type="text" class="form-control" id="mediaSize" name="mediaSize" value="" required>
-                        </div>
+
                         <div class="col-md-4 mb-3">
                             <label for="mediaScreens" class="form-label">No. of Screens</label>
                             <input type="number" class="form-control" id="mediaScreens" name="mediaScreens" value="" required>
@@ -258,12 +261,12 @@
                             <label for="mediaSlots" class="form-label">No. of Slots</label>
                             <input type="number" class="form-control" id="mediaSlots" name="mediaSlots" value="" required>
                           </div>
+                          <div class="col-md-4 mb-3">
+                            <label for="mediaDuration" class="form-label">Duration</label>
+                            <input type="text" class="form-control" id="mediaDuration" name="mediaDuration" value="" required>
+                          </div>
                     </div>
                     <div class="row">
-                      <div class="col-md-4 mb-3">
-                        <label for="mediaDuration" class="form-label">Duration</label>
-                        <input type="text" class="form-control" id="mediaDuration" name="mediaDuration" value="" required>
-                      </div>
                       <div class="col-md-4 mb-3">
                         <label for="mediaLoopTime" class="form-label">Loop Time</label>
                         <input type="text" class="form-control" id="mediaLoopTime" name="mediaLoopTime" value="" required>
@@ -271,6 +274,10 @@
                       <div class="col-md-4 mb-3">
                         <label for="mediaFootfalls" class="form-label">Approx Footfalls</label>
                         <input type="text" class="form-control" id="mediaFootfalls" name="mediaFootfalls" value="" required>
+                      </div>
+                      <div class="col-md-4 mb-3">
+                        <label for="mediaFootfalls" class="form-label">Location</label>
+                        <input type="text" class="form-control" id="mapLocation" name="mapLocation" value="" required>
                       </div>
                       <input type="hidden" name="dataUpdateId" id="dataUpdateId" value="0">
                     </div>
@@ -361,6 +368,7 @@
                     <div class="wrap">Loop Time: <%= location.md_ad_looptime %></div>
                     <div class="wrap">Approx Footfalls: <span><%= location.md_ad_footfalls %></span></div>
                 </div>
+                <div class="map_button" style="text-align: center;margin-top: 1rem;"><a class="mapLocation" onclick="mapredirect('<%= location.md_ad_map_location %>',event)" href="<%= location.md_ad_map_location %>"><button class="btn btn-primary">View Location</button></a></div>
             </div>
             <% if (isLoggedin) { %>
                 <button 
@@ -588,7 +596,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-
+const mapredirect  = (url,e) =>{
+    e.stopPropagation();  
+    window.location.href = url;
+}
 
 const editLocation = (md_ad_name, md_ad_type, md_ad_size, md_ad_num_screen, md_ad_num_slots, md_ad_num_duration, md_ad_looptime, md_ad_footfalls, md_ad_id, e) => {
         e.stopPropagation();  
