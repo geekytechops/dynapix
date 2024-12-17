@@ -21,6 +21,7 @@ router.get('/admin/edit-media/:id' , isAuthenticated , async (req, res) => {
     let pageId = req.params.id; 
     return await getSingleMallEditDetailsController(pageId, res);
 })
+
 router.post('/admin/delete-media', async (req, res) => {
     const mallId = req.body.id; // Fetch the ID from the request body
     if (!mallId) {
