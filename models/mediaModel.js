@@ -27,6 +27,47 @@ const MediaModel = {
             });
         });
     },
+    getSingleCampaignDetail: (mallId, page) => {
+        console.log(mallId);
+        return new Promise((resolve, reject) => {
+            const query = "SELECT * FROM dypx_campaign_data WHERE campaign_status = 0 AND campaign_type = ?";
+    
+            db.query(query, [page, mallId], (err, results) => {
+                if (err) {
+                    return reject(err); 
+                }
+    
+                // Initialize an array to collect all images
+                let allImages = [];
+    
+                // Process the results to separate images and other columns
+                const otherColumns = results.map(row => {
+                    // Assuming the column name for images is 'campaign_images'
+                    if (row.campaign_images) {
+                        // Assuming images are stored as a JSON array in the column, you can parse them
+                        try {
+                            const images = JSON.parse(row.campaign_images);
+                            allImages = allImages.concat(images); // Combine all images
+                        } catch (error) {
+                            // Handle case if campaign_images isn't a valid JSON array
+                            console.error("Error parsing campaign_images:", error);
+                        }
+                    }
+                    
+                    // Return other column data, excluding the images
+                    const { campaign_images, ...otherData } = row;
+                    return otherData;  // Return other data columns without images
+                });
+    
+                // Send all images and other columns separately
+                resolve({
+                    images: allImages,
+                    campaignDetails: otherColumns
+                });
+            });
+        });
+    },
+    
 
     getMallAdLocations: (mallId) => {
         return new Promise((resolve, reject) => {

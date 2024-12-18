@@ -15,6 +15,135 @@
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+        <!-- Owl Carousel CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+<style>
+    .modal{
+        background-color: #000000a1;
+    }
+    /* Ensure modal content doesn't cause overflow */
+.modal-dialog {
+    max-width: 90%; /* Set a max width for the modal */
+    margin: auto; /* Center the modal */
+    overflow: hidden; /* Hide overflow */
+}
+
+/* Prevent both vertical and horizontal scrollbars */
+.modal-content {
+    width: 100%;
+    height: auto; /* Adjust the height to the content */
+    overflow: hidden; /* Prevent overflow */
+}
+
+/* Disable scroll when modal is open */
+body.modal-open {
+    overflow: hidden; /* Disable body scrolling */
+}
+
+/* Optional: For responsive modal */
+@media (max-width: 768px) {
+    .modal-dialog {
+        max-width: 100%; /* Allow modal to take full width on small screens */
+    }
+}
+
+    /* Adjust the close button styling */
+.modal-header .close {
+    font-size: 30px;
+    color: #000;
+    opacity: 1;
+}
+
+.modal-header .close:hover,
+.modal-header .close:focus {
+    color: #f00; /* Change color on hover/focus */
+    text-decoration: none;
+    opacity: 1;
+}
+
+/* Disable scroll when the modal is open */
+body.modal-open {
+    overflow: hidden;
+}
+
+/* Optional: Add some margin for better modal visibility */
+.modal-dialog {
+    margin-top: 100px; /* Add top margin to make the modal more centered */
+    max-width: 80%; /* Adjust modal width */
+}
+
+    /* Style the Owl Carousel Navigation Arrows */
+.owl-carousel .owl-nav .owl-prev, .owl-carousel .owl-nav .owl-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    color: white;
+    padding: 10px;
+    font-size: 20px;
+    border-radius: 50%; /* Rounded edges */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); /* Add shadow for effect */
+    z-index: 10; /* Ensure the arrows are above the images */
+}
+
+/* Position the left arrow */
+.owl-carousel .owl-nav .owl-prev {
+    left: -25px; /* Adjust as per your layout */
+}
+
+/* Position the right arrow */
+.owl-carousel .owl-nav .owl-next {
+    right: -25px; /* Adjust as per your layout */
+}
+
+/* Add hover effect for arrows */
+.owl-carousel .owl-nav .owl-prev:hover, .owl-carousel .owl-nav .owl-next:hover {
+    background-color: rgba(0, 0, 0, 0.8); /* Darker background on hover */
+    cursor: pointer;
+}
+/* Ensure all carousel images have the same height and width */
+.owl-carousel .owl-item img {
+    width: 100%; /* Ensure the image takes the full width of the container */
+    height: 300px; /* Set a fixed height for all images */
+    object-fit: cover; /* Cover the container without distorting the image */
+    object-position: center; /* Center the image within the container */
+    display: block; /* Remove any extra space below the image */
+}
+
+/* Optional: Adjust the height for smaller screens (Mobile responsiveness) */
+@media (max-width: 768px) {
+    .owl-carousel .owl-item img {
+        height: 200px; /* Adjust height for mobile screens */
+    }
+}
+
+
+/* Optionally, style for smaller screens (Mobile responsiveness) */
+@media (max-width: 768px) {
+    .owl-carousel .owl-nav .owl-prev, .owl-carousel .owl-nav .owl-next {
+        font-size: 16px; /* Smaller font size on mobile */
+        padding: 8px; /* Adjust padding for smaller size */
+    }
+}
+
+        #carouselModal .modal-dialog {
+        max-width: 80%;  /* Adjust the width of the modal */
+        margin: 0 auto; /* Center the modal vertically and horizontally */
+    }
+
+    /* Set max width and height for carousel and images */
+    #carouselModal .modal-body .owl-carousel {
+        max-width: 100%;  /* Ensure the carousel doesn't exceed the modal's width */
+        max-height: 400px;  /* Limit the carousel height */
+    }
+
+    #carouselModal .modal-body .owl-carousel .item img {
+        max-width: 100%;  /* Ensure images scale to fit the container */
+        max-height: 100%;  /* Ensure images scale to fit the container */
+        object-fit: cover; /* Maintain aspect ratio */
+    }
+</style>
     </head>
     
     <body class="dark">
@@ -56,54 +185,24 @@
                     <div class="col-12 mb-2">
                     </div>
                     <div class="col-12 col-md-6 col-lg-4">
-                        <a href="malls.html" class="genre">
+                        <a href="javascript:void(0)" class="genre" onclick="getSlider('mall')">
                             <img src="images/category/img125.jpg">
                             <h2 class="title">Malls</h2>
                             
                         </a>
                     </div>
                     <div class="col-12 col-md-6 col-lg-4">
-                        <a href="theatres.html" class="genre">
+                        <a href="javascript:void(0)" class="genre" onclick="getSlider('theatre')">
                             <img src="images/category/img285.jpg">
                             <h2 class="title">Theatres</h2>
                         </a>
                     </div>
                     <div class="col-12 col-md-6 col-lg-4">
-                        <a href="fuel-stations.html" class="genre">
+                        <a href="javascript:void(0)" class="genre" onclick="getSlider('fuel-station')">
                             <img src="images/category/img388.jpg">
                             <h2 class="title">Fuel Stations</h2>
                             </a>
                     </div>
-<!--
-                    <div class="col-12 col-md-6 col-lg-4">
-                        <a class="genre">
-                            <img src="images/category/img355.jpg">
-                            <h2 class="title"> Smart Bin</h2>
-                            <p> An Innovative 200+ trash bins equipped with digital displays for advertising or informational purposes. These bins can display advertisements, public service announcements, or other content on their screens, making them a potentially effective advertising medium in public spaces.</p>
-                        </a>
-                    </div>
-                    <div class="col-12 col-md-6 col-lg-4">
-                        <a class="genre">
-                            <img src="images/category/img266.jpg">
-                            <h2 class="title">Airport</h2>
-                            <p>Exclusive DOOH Inventory at Bhopal Airport and Jabalpur Airport</p>
-                        </a>
-                    </div>
-                    <div class="col-12 col-md-6 col-lg-4">
-                        <a class="genre">
-                            <img src="images/category/img229.jpg">
-                            <h2 class="title">Metro</h2>
-                            <p> An exclusive opportunity to wrap metro trains for Nagpur Metro and passenger train wrap at Raipur route. Exclusive presence of Digital Screens across Nagpur and Raipur Railway Stations.</p>
-                        </a>
-                    </div>
-                    <div class="col-12 col-md-6 col-lg-4">
-                        <a class="genre">
-                            <img src="images/category/img362.jpg">
-                            <h2 class="title">DOOH Media</h2>
-                            <p>Our unmissable DOOH screens are strategically positioned across locations in Mumbai.</p>
-                        </a>
-                    </div>
--->
                 </div>
             </div>
         </section>
@@ -159,6 +258,25 @@
                 </div>
             </div>
         </footer>
+
+        <div id="carouselModal" class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Campaign Images</h5>
+                        <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close" onclick="closeModal()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Owl Carousel -->
+                        <div class="owl-carousel">
+                            <!-- Dynamic images will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         
         <div class="modal" id="mobilemenu" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="termsLabel">
            <div class="modal-dialog">
@@ -179,12 +297,58 @@
                </div>
             </div>
         </div>
-        
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
         <script>
         
              $(document).on("click",".menuiitem", function(){
                 $("#btnclose").trigger("click");
             })
+
+            const getSlider = (campaignType) => {
+        $.ajax({
+            type: 'get',
+            url: '/getCampaignDetails/' + campaignType,
+            success: function (data) {
+                const images = data.mall.images;  // Assuming the data structure has images property
+                
+                // Clear any existing carousel content
+                $('#carouselModal .modal-body .owl-carousel').html('');
+
+                // Prepare the new carousel content
+                let carouselContent = '';
+                images.forEach(image => {
+                    carouselContent += `<div class="item"><img src="${image}" alt="Image"></div>`;
+                });
+
+                // Inject the new carousel content into the modal
+                $('#carouselModal .modal-body .owl-carousel').html(carouselContent);
+
+                // Destroy any existing Owl Carousel instance before initializing again
+                $('#carouselModal .owl-carousel').owlCarousel('destroy');
+
+                // Re-initialize the Owl Carousel with the new images
+                $('#carouselModal .owl-carousel').owlCarousel({
+                    loop: true,
+                    margin: 10,
+                    nav: true,
+                    items: 3,
+                    autoplay: true,  // Optional: Auto play images
+                    autoplayTimeout: 5000, // Timeout for autoplay
+                    autoplayHoverPause: true  // Pause autoplay on hover
+                });
+
+                // Show the modal
+                $('#carouselModal').modal('show');
+            }
+        });
+    }
+
+    function closeModal() {
+    $('#carouselModal').modal('hide');
+    $('body').removeClass('modal-open'); // Enable body scroll again
+}
 
         </script>
         

@@ -85,6 +85,24 @@ const getSingleMallDetailsController = async (isLoggedin, pageId, page, res) => 
     }
 };
 
+const getCampaignDataController = async (isLoggedin, pageId, page, res) => {
+    const mallId = pageId;
+    try {
+        
+        const mallDetails = await MediaModel.getSingleCampaignDetail(mallId, page);
+
+        if (!mallDetails) {
+            return res.status(404).send('Mall not found');
+        }
+        res.json({ 
+            mall: mallDetails, 
+            isLoggedin: isLoggedin 
+        });
+    } catch (error) {
+        console.error('Error fetching mall details or ad locations:', error.message);
+        res.status(500).send('Internal Server Error');
+    }
+};
 
 const getSingleMallEditDetailsController = async (pageId, res) => {
     const mallId = pageId;
@@ -190,4 +208,4 @@ const deleteLobbyMediaController = async (req, res) => {
 };
 
 
-module.exports = { addMediaController , addCampaignController , filterMallsController , editLobbyMediaController , addLobbyMediaController ,deleteLobbyMediaController , updateMediaController,  getMallDetailsController ,getSingleMallDetailsController , getSingleMallEditDetailsController };
+module.exports = { addMediaController ,getCampaignDataController, addCampaignController , filterMallsController , editLobbyMediaController , addLobbyMediaController ,deleteLobbyMediaController , updateMediaController,  getMallDetailsController ,getSingleMallDetailsController , getSingleMallEditDetailsController };

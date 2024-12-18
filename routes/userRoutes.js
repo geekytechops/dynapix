@@ -3,7 +3,7 @@ const router = express.Router();
 const fs = require('fs');
 const path = require('path')
 const session = require('express-session');
-const {getMallDetailsController , getSingleMallDetailsController , filterMallsController} = require('../controllers/mediaController')
+const {getMallDetailsController ,getCampaignDataController, getSingleMallDetailsController , filterMallsController} = require('../controllers/mediaController')
 const { addLobbyMediaController , editLobbyMediaController , deleteLobbyMediaController} = require('../controllers/mediaController')
 
 router.use(session({
@@ -37,6 +37,12 @@ router.get('/fuel-station/:id', async (req, res) => {
         return await getSingleMallDetailsController(isLoggedin,pageId,pagename, res);
 });
 
+router.get('/getCampaignDetails/:campaignType', async (req, res) => {
+    const isLoggedin = req.session.user && req.session.user.isLoggedin || false;
+    let pageId = req.params.campaignType; 
+        pagename='Mall';
+        return await getCampaignDataController(isLoggedin,pageId,pagename, res);
+});
 
 router.post('/delete-media/:id', deleteLobbyMediaController);
 
