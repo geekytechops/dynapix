@@ -99,17 +99,18 @@ v<!DOCTYPE html>
     <form id="mediaForm">
       <div class="mb-3">
         <label for="mediaType" class="form-label">Campaign Type</label>
-        <select name="mediaType" id="mediaType" class="form-select">
-          <option value="Mall">Mall</option>
-          <option value="Theatre">Theatre</option>
-          <option value="Fuel Station">Fuel Station</option>
-        </select>
-        <div class="error-message" id="TypeError">Please select a valid Type.</div>
+          <input type="text" id="mediaType" name="mediaType" class="form-control" placeholder="Enter the Campaign Type">
+        <div class="error-message" id="TypeError">Please Enter a valid Type.</div>
       </div>
       <div class="mb-3">
         <label for="mediaTitle" class="form-label">Campaign Title</label>
         <input type="text" class="form-control" id="mediaTitle" name="mediaTitle" placeholder="Enter media title" required>
         <div class="error-message" id="titleError">Please enter a valid title.</div>
+      </div>
+      <div class="mb-3">
+        <label for="mediaMainImage" class="form-label">Campaign Main Image</label>
+        <input type="file" class="form-control" id="mediaMainImage" name="mediaMainImage" accept="image/*" multiple required>
+        <div class="error-message" id="MainimageError">Please upload a valid image.</div>
       </div>
       <div class="mb-3">
         <label for="mediaImage" class="form-label">Campaign Images</label>
@@ -134,25 +135,17 @@ v<!DOCTYPE html>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
-    // Show or hide additional fields based on media type selection
-    $('#mediaType').change(function() {
-      if ($(this).val() == 'Fuel Station') { 
-        $('.additional-fields').show();
-      } else {
-        $('.additional-fields').hide();
-      }
-    });
-
+    
     $('#submitForm').click(function(e) {
       e.preventDefault();
 
       let formData = new FormData($('#mediaForm')[0]);
 
-
       let isValid = true;
-
+      if($('#mediaType').val() === '') { $('#typeError').show(); isValid = false; } else { $('#typeError').hide(); }
       if($('#mediaTitle').val() === '') { $('#titleError').show(); isValid = false; } else { $('#titleError').hide(); }
       if($('#mediaImage').val() === '') { $('#imageError').show(); isValid = false; } else { $('#imageError').hide(); }
+      if($('#mediaMainImage').val() === '') { $('#MainimageError').show(); isValid = false; } else { $('#MainimageError').hide(); }
       if($('#mediaDescription').val() === '') { $('#descriptionError').show(); isValid = false; } else { $('#descriptionError').hide(); }
       
       if(isValid) {

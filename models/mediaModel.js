@@ -15,6 +15,17 @@ const MediaModel = {
             });
         });
     },
+    getCampaignsDetails: (page) => {
+        return new Promise((resolve, reject) => {
+            const query = "SELECT * FROM dypx_campaign_data WHERE campaign_status = 0"; 
+            db.query(query,[], (err, results) => {
+                if (err) {
+                    return reject(err); 
+                }
+                resolve(results); 
+            });
+        });
+    },
     getSingleMallDetail: (mallId,page) => {
         return new Promise((resolve, reject) => {
             const query = "SELECT * FROM dypx_media_data WHERE md_location_type = ? AND md_id = ?";
@@ -32,7 +43,7 @@ const MediaModel = {
         return new Promise((resolve, reject) => {
             const query = "SELECT * FROM dypx_campaign_data WHERE campaign_status = 0 AND campaign_type = ?";
     
-            db.query(query, [page, mallId], (err, results) => {
+            db.query(query, [mallId], (err, results) => {
                 if (err) {
                     return reject(err); 
                 }
@@ -240,115 +251,117 @@ const MediaModel = {
             });
         });
     },
-    addCampaign: (mediaData, mediaImages) => {
+    addCampaign: (mediaData, mediaImages, mediaMainImage) => {
         return new Promise((resolve, reject) => {
-            const {
-                mediaType,
-                mediaTitle,
-                mediaDescription,
-            } = mediaData;
+            const { mediaType, mediaTitle, mediaDescription } = mediaData;
     
-            const status = 0;
             let imagePaths = [];
+            let mainImagePath = '';
     
-            if (mediaImages && Array.isArray(mediaImages)) {
-                const uploadDir = path.join(__dirname, '../uploads/');
+            // Normalize mediaImages and mediaMainImage to arrays
+            if (mediaImages && !Array.isArray(mediaImages)) {
+                mediaImages = [mediaImages];
+            }
     
-                // Create the uploads directory if it doesn't exist
-                if (!fs.existsSync(uploadDir)) {
-                    fs.mkdirSync(uploadDir, { recursive: true });
-                }
+            const uploadDir = path.join(__dirname, '../uploads/');
     
-                const validExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+            // Create the uploads directory if it doesn't exist
+            if (!fs.existsSync(uploadDir)) {
+                fs.mkdirSync(uploadDir, { recursive: true });
+            }
     
-                const uploadPromises = mediaImages.map((mediaImage) => {
-                    return new Promise((resolve, reject) => {
-                        const timestamp = Date.now();
-                        const originalName = mediaImage.name.replace(/\s+/g, '_');
-                        const uniqueName = `${timestamp}_${originalName}`;
+            const validExtensions = ['jpg', 'jpeg', 'png', 'gif'];
     
-                        const targetFile = path.join(uploadDir, uniqueName);
-                        const relativeImagePath = `uploads/${uniqueName}`;
+            // Handle the main image upload
+            const mainImagePromise = new Promise((resolve, reject) => {
+                if (mediaMainImage) {
+                    const timestamp = Date.now();
+                    const originalName = mediaMainImage.name.replace(/\s+/g, '_');
+                    const uniqueName = `${timestamp}_${originalName}`;
     
-                        const fileExtension = path.extname(mediaImage.name).toLowerCase();
+                    const targetFile = path.join(uploadDir, uniqueName);
+                    const relativeImagePath = `uploads/${uniqueName}`;
     
-                        // Check for valid file extension
-                        if (!validExtensions.includes(fileExtension.substring(1))) {
-                            return reject(new Error('Only JPG, JPEG, PNG, and GIF files are allowed.'));
+                    const fileExtension = path.extname(mediaMainImage.name).toLowerCase();
+    
+                    // Check for valid file extension
+                    if (!validExtensions.includes(fileExtension.substring(1))) {
+                        return reject(new Error('Only JPG, JPEG, PNG, and GIF files are allowed.'));
+                    }
+    
+                    // Move the main image file to the target location
+                    mediaMainImage.mv(targetFile, (err) => {
+                        if (err) {
+                            return reject(new Error('Error uploading the main image.'));
                         }
     
-                        // Move the file to the target location
-                        mediaImage.mv(targetFile, (err) => {
-                            if (err) {
-                                return reject(new Error('Error uploading the file.'));
-                            }
+                        mainImagePath = relativeImagePath; // Save the main image path
+                        resolve();
+                    });
+                } else {
+                    resolve(); // No main image provided
+                }
+            });
     
-                            // Add the relative path to the imagePaths array
-                            imagePaths.push(relativeImagePath);
-                            resolve();
-                        });
+            // Handle other images upload
+            const uploadPromises = mediaImages.map((mediaImage) => {
+                return new Promise((resolve, reject) => {
+                    const timestamp = Date.now();
+                    const originalName = mediaImage.name.replace(/\s+/g, '_');
+                    const uniqueName = `${timestamp}_${originalName}`;
+    
+                    const targetFile = path.join(uploadDir, uniqueName);
+                    const relativeImagePath = `uploads/${uniqueName}`;
+    
+                    const fileExtension = path.extname(mediaImage.name).toLowerCase();
+    
+                    // Check for valid file extension
+                    if (!validExtensions.includes(fileExtension.substring(1))) {
+                        return reject(new Error('Only JPG, JPEG, PNG, and GIF files are allowed.'));
+                    }
+    
+                    // Move the file to the target location
+                    mediaImage.mv(targetFile, (err) => {
+                        if (err) {
+                            return reject(new Error('Error uploading the file.'));
+                        }
+    
+                        imagePaths.push(relativeImagePath); // Add to image paths array
+                        resolve();
                     });
                 });
+            });
     
-                // Wait for all image uploads to complete
-                Promise.all(uploadPromises)
-                    .then(() => {
-                        // Insert the data into the database once all images are uploaded
-                        const query = `
-                            INSERT INTO dypx_campaign_data 
-                            (campaign_title,campaign_type, campaign_desc, campaign_images) 
-                            VALUES (?, ?, ?, ?)
-                        `;
+            // Wait for all uploads to complete
+            Promise.all([mainImagePromise, ...uploadPromises])
+                .then(() => {
+                    // Insert the data into the database once all images are uploaded
+                    const query = `
+                        INSERT INTO dypx_campaign_data 
+                        (campaign_title, campaign_type, campaign_main_image, campaign_desc, campaign_images) 
+                        VALUES (?, ?, ?, ?, ?)
+                    `;
     
-                        const values = [
-                            mediaTitle,
-                            mediaType,
-                            mediaDescription,
-                            JSON.stringify(imagePaths), // Store image paths as JSON string                            
-                        ];
+                    const values = [
+                        mediaTitle,
+                        mediaType,
+                        mainImagePath, // Main image path
+                        mediaDescription,
+                        JSON.stringify(imagePaths), // Store other image paths as JSON string
+                    ];
     
-                        db.query(query, values, (err, result) => {
-                            if (err) return reject(err);
-                            resolve(result);
-                        });
-                    })
-                    .catch((err) => {
-                        console.error(err);
-                        return reject(err);
+                    db.query(query, values, (err, result) => {
+                        if (err) return reject(err);
+                        resolve(result);
                     });
-            } 
-            // else {
-            //     // No images provided, insert the data without image paths
-            //     const query = `
-            //         INSERT INTO dypx_media_data 
-            //         (md_name, md_location_type, md_location, md_image, md_description, md_footfalls, md_duration, 
-            //          md_num_slots, md_num_screens, md_size, 
-            //          md_looptime, md_status) 
-            //         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            //     `;
-    
-            //     const values = [
-            //         mediaTitle,
-            //         mediaType,
-            //         mediaLocation,
-            //         null, // No images
-            //         mediaDescription,
-            //         mediaFootfalls,
-            //         mediaDuration,
-            //         mediaSlots,
-            //         mediaScreens,
-            //         mediaSize,
-            //         mediaLoopTime,
-            //         status,
-            //     ];
-    
-            //     db.query(query, values, (err, result) => {
-            //         if (err) return reject(err);
-            //         resolve(result);
-            //     });
-            // }
+                })
+                .catch((err) => {
+                    console.error(err);
+                    return reject(err);
+                });
         });
-    },
+    },   
+    
     
     addLobbyMedia: (mdId, mediaData, mediaImage) => {
         return new Promise((resolve, reject) => {

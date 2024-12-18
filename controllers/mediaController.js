@@ -164,9 +164,10 @@ const addCampaignController = async (req, res) => {
 
     const mediaData = req.body;
     const mediaImage = req.files ? req.files.mediaImage : null;
+    const mediaMainImage = req.files ? req.files.mediaMainImage : null;
 
     try {
-        const result = await MediaModel.addCampaign(mediaData, mediaImage);
+        const result = await MediaModel.addCampaign(mediaData, mediaImage , mediaMainImage);
         res.status(200).json({ message: 'Campaign data inserted successfully.', result });
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -195,6 +196,25 @@ const getMallDetailsController = async (isLoggedin,page, res) => {
     }
 };
 
+const getCampaignsData = async (isLoggedin,page, res) => {
+    try {
+        const mallDetails = await MediaModel.getCampaignsDetails(page); 
+        pagename = page.toLowerCase();
+        console.log(isLoggedin);
+        res.render(pagename, {
+            title: 'Brand Stories',
+            mallData: mallDetails, 
+            isLoggedin:isLoggedin
+        });
+    } catch (error) {
+        console.log(error)
+        res.status(500).render('error', {
+            message: 'An error occurred while retrieving mall details.',
+            error: error.message,
+        });
+    }
+}
+
 const deleteLobbyMediaController = async (req, res) => {
     const mdId = req.params.id; 
 
@@ -208,4 +228,4 @@ const deleteLobbyMediaController = async (req, res) => {
 };
 
 
-module.exports = { addMediaController ,getCampaignDataController, addCampaignController , filterMallsController , editLobbyMediaController , addLobbyMediaController ,deleteLobbyMediaController , updateMediaController,  getMallDetailsController ,getSingleMallDetailsController , getSingleMallEditDetailsController };
+module.exports = { addMediaController ,getCampaignDataController, addCampaignController , filterMallsController , editLobbyMediaController , addLobbyMediaController ,deleteLobbyMediaController , updateMediaController, getCampaignsData, getMallDetailsController ,getSingleMallDetailsController , getSingleMallEditDetailsController };

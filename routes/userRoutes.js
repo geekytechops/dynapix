@@ -3,7 +3,7 @@ const router = express.Router();
 const fs = require('fs');
 const path = require('path')
 const session = require('express-session');
-const {getMallDetailsController ,getCampaignDataController, getSingleMallDetailsController , filterMallsController} = require('../controllers/mediaController')
+const {getMallDetailsController ,getCampaignsData,getCampaignDataController, getSingleMallDetailsController , filterMallsController} = require('../controllers/mediaController')
 const { addLobbyMediaController , editLobbyMediaController , deleteLobbyMediaController} = require('../controllers/mediaController')
 
 router.use(session({
@@ -65,6 +65,9 @@ router.get('/:page', async (req, res) => {
     } else if( page=='fuel-stations'){
         pagename='Fuel Station'       
         return await getMallDetailsController(isLoggedin,pagename, res);
+    }else if(page=='brand-stories'){
+        pagename='brand-stories'       
+        return await getCampaignsData(isLoggedin,pagename, res);
     }
  
     const filePath = path.join(__dirname,'..', 'views', `${page}.ejs`);

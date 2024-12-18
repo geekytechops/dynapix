@@ -184,25 +184,19 @@ body.modal-open {
                 <div class="row">
                     <div class="col-12 mb-2">
                     </div>
+                   
+                    <% if (mallData.length > 0) { %>
+                        <% mallData.forEach(mallData => { %>
                     <div class="col-12 col-md-6 col-lg-4">
                         <a href="javascript:void(0)" class="genre" onclick="getSlider('mall')">
-                            <img src="images/category/img125.jpg">
-                            <h2 class="title">Malls</h2>
+                            <img src="../<%= mallData.campaign_main_image || 'images/default.jpg' %>" alt="Image for <%= mallData.campaign_main_image %>">
+                            <h2 class="title"><%= mallData.campaign_type %></h2>
                             
                         </a>
                     </div>
-                    <div class="col-12 col-md-6 col-lg-4">
-                        <a href="javascript:void(0)" class="genre" onclick="getSlider('theatre')">
-                            <img src="images/category/img285.jpg">
-                            <h2 class="title">Theatres</h2>
-                        </a>
-                    </div>
-                    <div class="col-12 col-md-6 col-lg-4">
-                        <a href="javascript:void(0)" class="genre" onclick="getSlider('fuel-station')">
-                            <img src="images/category/img388.jpg">
-                            <h2 class="title">Fuel Stations</h2>
-                            </a>
-                    </div>
+                    <% }); %>
+    
+                    <% } %>
                 </div>
             </div>
         </section>
@@ -273,6 +267,10 @@ body.modal-open {
                         <div class="owl-carousel">
                             <!-- Dynamic images will be inserted here -->
                         </div>
+                        <div class="slider-description">
+                            <h2 class="slider-title">Campaign Media</h2>
+                            <p class="slider-description-text">Explore our latest media campaigns from various categories, including malls, theatres, and fuel stations.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -311,6 +309,7 @@ body.modal-open {
             type: 'get',
             url: '/getCampaignDetails/' + campaignType,
             success: function (data) {
+                console.log(data);
                 const images = data.mall.images;  // Assuming the data structure has images property
                 
                 // Clear any existing carousel content
