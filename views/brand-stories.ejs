@@ -19,6 +19,9 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
 <style>
+    .campaign-block button{
+        font-size:12px;
+    }
     .modal{
         background-color: #000000a1;
     }
@@ -182,21 +185,35 @@ body.modal-open {
         <section class="pt-5 pb-4 mb-3">
             <div class="container">
                 <div class="row">
-                    <div class="col-12 mb-2">
-                    </div>
-                   
+                                      
                     <% if (mallData.length > 0) { %>
                         <% mallData.forEach(mallData => { %>
-                    <div class="col-12 col-md-6 col-lg-4">
-                        <a href="javascript:void(0)" class="genre" onclick="getSlider('<%= mallData.campaign_type %>')">
-                            <img src="../<%= mallData.campaign_main_image || 'images/default.jpg' %>" alt="Image for <%= mallData.campaign_main_image %>">
-                            <h2 class="title"><%= mallData.campaign_type %></h2>
-                            
-                        </a>
-                    </div>
-                    <% }); %>
-    
+                        <div class="col-12 col-md-6 col-lg-4 position-relative campaign-block">
+                            <a href="javascript:void(0)" class="genre" onclick="getSlider('<%= mallData.campaign_type %>')">
+                                <img src="../<%= mallData.campaign_main_image || 'images/default.jpg' %>" alt="Image for <%= mallData.campaign_main_image %>" class="img-fluid">
+                                <h2 class="title"><%= mallData.campaign_type %></h2>
+                            </a>
+                    
+                            <% if (isLoggedin) { %>
+                                <button 
+                                    class="btn btn-primary position-absolute edit-button" 
+                                    data-id="<%= mallData.campaign_id %>"
+                                    style="top: 10px; left: 10px;"
+                                    onclick="editCampaign('<%= mallData.campaign_id %>', event)">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <button 
+                                    class="btn btn-danger position-absolute delete-button" 
+                                    data-id="<%= mallData.campaign_id %>"
+                                    style="top: 10px; right: 10px;"
+                                    onclick="deleteCampaign('<%= mallData.campaign_id %>', event)">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            <% } %>
+                        </div>
+                        <% }); %>
                     <% } %>
+                    
                 </div>
             </div>
         </section>
@@ -350,6 +367,26 @@ body.modal-open {
     $('#carouselModal').modal('hide');
     $('body').removeClass('modal-open'); // Enable body scroll again
 }
+const editCampaign = (campaignId) =>{
+    window.location.href="/admin/edit-brandstories/"+campaignId;
+}
+const deleteCampaign = (mallId) =>{
+
+    if (confirm('Are you sure you want to delete this media?')) {
+        $.ajax({
+            url: '/admin/delete-campaign',
+            type: 'POST',
+            data: { id: mallId },
+            success: function () {
+                alert('Media deleted successfully!');
+                window.location.href = '/brand-stories'; 
+            },
+            error: function (xhr) {
+                alert('Failed to delete media: ' + xhr.responseText);
+            },
+        });
+    }
+};
 
         </script>
         

@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path')
 const {addMediaController , updateMediaController , addCampaignController} = require('../controllers/mediaController')
 const { redirectHtmlMiddleware, isAuthenticated } = require('../middlewares/routerMiddleware');
-const {getSingleMallEditDetailsController , deleteSingleMallController} = require('../controllers/mediaController')
+const {getSingleMallEditDetailsController , deleteSingleCampaignController,getCamapaignDetailsController, deleteSingleMallController} = require('../controllers/mediaController')
 
 router.get('/admin', (req, res) => {
     res.render('admin/index');
@@ -31,9 +31,26 @@ router.post('/admin/delete-media', async (req, res) => {
     await deleteSingleMallController(mallId, res);
 });
 
-router.get('/admin/:page',isAuthenticated, (req, res) => {
+router.post('/admin/delete-campaign', async (req, res) => {
+    const mallId = req.body.id; 
+    if (!mallId) {
+        return res.status(400).send('Campaign ID is required');
+    }
+
+    await deleteSingleCampaignController(mallId, res);
+});
+
+router.get('/admin/:page/:id?',isAuthenticated, async(req, res) => {
     const page = req.params.page; 
+    const pageId = req.params.id; 
  
+    if(page=='edit-brandstories'){
+        const mallDetails = await getCamapaignDetailsController(pageId, res);
+        const  mallDetailsData = mallDetails[0];
+        console.log(mallDetailsData);
+        return res.render(path.join('admin', page), { mallDetailsData });
+    }
+
     const filePath = path.join(__dirname,'..', 'views','admin', `${page}.ejs`);
     fs.access(filePath, fs.constants.F_OK, (err) => {
         if (err) {

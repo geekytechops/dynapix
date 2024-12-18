@@ -512,7 +512,26 @@ deleteLobbyMedia: (mdId) => {
             resolve(result);
         });
     });
+},
+deleteCampaign: (mdId) => {
+    return new Promise((resolve, reject) => {
+        const query = `DELETE FROM dypx_campaign_data WHERE campaign_id = ?`;
+        db.query(query, [mdId], (err, result) => {
+            if (err) return reject(err);
+            resolve(result);
+        });
+    });
+},
+getCamapaignDetailsModel: (mdId,page) => {
+    return new Promise((resolve, reject) => {
+        const query = `SELECT * FROM dypx_campaign_data WHERE campaign_id = ?`;
+        db.query(query, [mdId], (err, result) => {
+            if (err) return reject(err);
+            resolve(result);
+        });
+    });
 }
+
 
 };
 
