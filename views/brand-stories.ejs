@@ -188,7 +188,7 @@ body.modal-open {
                     <% if (mallData.length > 0) { %>
                         <% mallData.forEach(mallData => { %>
                     <div class="col-12 col-md-6 col-lg-4">
-                        <a href="javascript:void(0)" class="genre" onclick="getSlider('mall')">
+                        <a href="javascript:void(0)" class="genre" onclick="getSlider('<%= mallData.campaign_type %>')">
                             <img src="../<%= mallData.campaign_main_image || 'images/default.jpg' %>" alt="Image for <%= mallData.campaign_main_image %>">
                             <h2 class="title"><%= mallData.campaign_type %></h2>
                             
@@ -315,6 +315,8 @@ body.modal-open {
                 // Clear any existing carousel content
                 $('#carouselModal .modal-body .owl-carousel').html('');
 
+                $('#carouselModal .slider-title').html(data.mall.campaignDetails[0].campaign_title);
+                $('#carouselModal .slider-description-text').html(data.mall.campaignDetails[0].campaign_desc);
                 // Prepare the new carousel content
                 let carouselContent = '';
                 images.forEach(image => {
