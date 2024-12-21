@@ -193,6 +193,20 @@ const addCampaignController = async (req, res) => {
     }
 };
 
+const editCampaignController = async (req, res) => {
+
+    const mediaData = req.body;
+    const mediaImage = req.files ? req.files.mediaImage : null;
+    const mediaMainImage = req.files ? req.files.mediaMainImage : null;
+
+    try {
+        const result = await MediaModel.editCampaign(mediaData, mediaImage , mediaMainImage);
+        res.status(200).json({ message: 'Campaign data inserted successfully.', result });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 const getMallDetailsController = async (isLoggedin,page, res) => {
        try {
         const mallDetails = await MediaModel.getMallDetails(page); 
@@ -260,4 +274,4 @@ const deleteSingleCampaignController = async (mdId, res) => {
 
 
 
-module.exports = { addMediaController , deleteSingleCampaignController ,getCampaignDataController, addCampaignController , filterMallsController , editLobbyMediaController , addLobbyMediaController ,deleteLobbyMediaController , updateMediaController, getCampaignsData,getCamapaignDetailsController, getMallDetailsController ,getSingleMallDetailsController , getSingleMallEditDetailsController };
+module.exports = { addMediaController , deleteSingleCampaignController ,getCampaignDataController, editCampaignController, addCampaignController , filterMallsController , editLobbyMediaController , addLobbyMediaController ,deleteLobbyMediaController , updateMediaController, getCampaignsData,getCamapaignDetailsController, getMallDetailsController ,getSingleMallDetailsController , getSingleMallEditDetailsController };

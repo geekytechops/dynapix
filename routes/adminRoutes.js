@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path')
 const {addMediaController , updateMediaController , addCampaignController} = require('../controllers/mediaController')
 const { redirectHtmlMiddleware, isAuthenticated } = require('../middlewares/routerMiddleware');
-const {getSingleMallEditDetailsController , deleteSingleCampaignController,getCamapaignDetailsController, deleteSingleMallController} = require('../controllers/mediaController')
+const {getSingleMallEditDetailsController,editCampaignController , deleteSingleCampaignController,getCamapaignDetailsController, deleteSingleMallController} = require('../controllers/mediaController')
 
 router.get('/admin', (req, res) => {
     res.render('admin/index');
@@ -64,6 +64,7 @@ router.get('/admin/:page/:id?',isAuthenticated, async(req, res) => {
 
 router.post('/add-media', addMediaController);
 router.post('/add-campaign', addCampaignController);
+router.post('/edit-campaign', editCampaignController);
 router.post('/update-media', updateMediaController);
 
 module.exports = router;

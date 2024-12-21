@@ -99,36 +99,47 @@ v<!DOCTYPE html>
     <form id="mediaForm">
       <div class="mb-3">
         <label for="mediaType" class="form-label">Campaign Type</label>
-          <input type="text" id="mediaType" name="mediaType" class="form-control" placeholder="Enter the Campaign Type" value="<%= mallDetailsData.campaign_type %>" required>
-        <div class="error-message" id="TypeError">Please Enter a valid Type.</div>
+        <input type="text" id="mediaType" name="mediaType" class="form-control" placeholder="Enter the Campaign Type" value="<%= mallDetailsData.campaign_type %>" required>
+        <div class="error-message" id="typeError">Please Enter a valid Type.</div>
       </div>
+  
       <div class="mb-3">
         <label for="mediaTitle" class="form-label">Campaign Title</label>
         <input type="text" class="form-control" id="mediaTitle" name="mediaTitle" placeholder="Enter media title" value="<%= mallDetailsData.campaign_title %>" required>
         <div class="error-message" id="titleError">Please enter a valid title.</div>
       </div>
+  
       <div class="mb-3">
         <label for="mediaMainImage" class="form-label">Campaign Main Image</label>
-        <input type="file" class="form-control" id="mediaMainImage" name="mediaMainImage" accept="image/*" multiple required>
+        <input type="file" class="form-control" id="mediaMainImage" name="mediaMainImage" accept="image/*">
         <div class="error-message" id="MainimageError">Please upload a valid image.</div>
+        <div id="mainImagePreview" class="mt-3">
+          <% if (mallDetailsData.campaign_main_image) { %>
+            <img src="../../<%= mallDetailsData.campaign_main_image %>" alt="Main Campaign Image" class="img-thumbnail" style="max-width: 200px;">
+          <% } %>
+        </div>
       </div>
+  
       <div class="mb-3">
         <label for="mediaImage" class="form-label">Campaign Images</label>
-        <input type="file" class="form-control" id="mediaImage" name="mediaImage" accept="image/*" multiple required>
+        <input type="file" class="form-control" id="mediaImage" name="mediaImage" accept="image/*" multiple>
         <div class="error-message" id="imageError">Please upload a valid image.</div>
+        <div id="imagesPreview" class="mt-3 d-flex flex-wrap">
+          <% if (JSON.parse(mallDetailsData.campaign_images) && JSON.parse(mallDetailsData.campaign_images).length > 0) { %>
+            <% JSON.parse(mallDetailsData.campaign_images).forEach(function(image) { %>
+              <img src="../../<%= image %>" alt="Campaign Image" class="img-thumbnail m-1" style="max-width: 100px;">
+            <% }); %>
+          <% } %>
+        </div>
       </div>
+  
       <div class="mb-3">
         <label for="mediaDescription" class="form-label">Campaign Description</label>
-        <textarea class="form-control" id="mediaDescription" name="mediaDescription" rows="3" placeholder="Enter media description" required> <%= mallDetailsData.campaign_desc %></textarea>
+        <textarea class="form-control" id="mediaDescription" name="mediaDescription" rows="3" placeholder="Enter media description" required><%= mallDetailsData.campaign_desc %></textarea>
+        <input type="hidden" name="campaign_id" id="campaign_id" value="<%= mallDetailsData.campaign_id %>">
         <div class="error-message" id="descriptionError">Please enter a description.</div>
       </div>
-      
-      
-      
-
-      <!-- Additional Fields for Fuel Station -->
-    
-
+  
       <button type="submit" class="btn btn-primary w-100" id="submitForm">Submit Campaign Information</button>
     </form>
   </div>
@@ -137,35 +148,32 @@ v<!DOCTYPE html>
   <script>
     
     $('#submitForm').click(function(e) {
-      e.preventDefault();
+    e.preventDefault();
 
-      let formData = new FormData($('#mediaForm')[0]);
+    let formData = new FormData($('#mediaForm')[0]);
 
-      let isValid = true;
-      if($('#mediaType').val() === '') { $('#typeError').show(); isValid = false; } else { $('#typeError').hide(); }
-      if($('#mediaTitle').val() === '') { $('#titleError').show(); isValid = false; } else { $('#titleError').hide(); }
-      if($('#mediaImage').val() === '') { $('#imageError').show(); isValid = false; } else { $('#imageError').hide(); }
-      if($('#mediaMainImage').val() === '') { $('#MainimageError').show(); isValid = false; } else { $('#MainimageError').hide(); }
-      if($('#mediaDescription').val() === '') { $('#descriptionError').show(); isValid = false; } else { $('#descriptionError').hide(); }
-      
-      if(isValid) {
-        $.ajax({
-          url: '/add-campaign',
-          type: 'POST',
-          data: formData,
-          processData: false,
-          contentType: false,
-          success: function(response) {
-            alert('Data submitted successfully!');
-            
-            $('#mediaForm')[0].reset();
-          },
-          error: function(xhr, status, error) {
-            alert('An error occurred: ' + error);
-          }
-        });
-      }
-    });
+    let isValid = true;
+    if ($('#mediaType').val() === '') { $('#typeError').show(); isValid = false; } else { $('#typeError').hide(); }
+    if ($('#mediaTitle').val() === '') { $('#titleError').show(); isValid = false; } else { $('#titleError').hide(); }
+    if ($('#mediaDescription').val() === '') { $('#descriptionError').show(); isValid = false; } else { $('#descriptionError').hide(); }
+
+    if (isValid) {
+      $.ajax({
+        url: '/edit-campaign',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+          alert('Data submitted successfully!');
+          $('#mediaForm')[0].reset();
+        },
+        error: function(xhr, status, error) {
+          alert('An error occurred: ' + error);
+        }
+      });
+    }
+  });
 
     $('#logoutButton').click(function() {
       $.ajax({

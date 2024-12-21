@@ -361,6 +361,113 @@ const MediaModel = {
                 });
         });
     },   
+
+
+    editCampaign: (mediaData, mediaImages, mediaMainImage) => {
+        return new Promise((resolve, reject) => {
+            const { mediaType, mediaTitle, mediaDescription, campaign_id } = mediaData;
+    
+            let imagePaths = [];
+            let mainImagePath = '';
+    
+            const uploadDir = path.join(__dirname, '../uploads/');
+    
+            if (!fs.existsSync(uploadDir)) {
+                fs.mkdirSync(uploadDir, { recursive: true });
+            }
+    
+            const validExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+    
+            // Handle main image
+            const mainImagePromise = new Promise((resolve, reject) => {
+                if (mediaMainImage) {
+                    const timestamp = Date.now();
+                    const originalName = mediaMainImage.name.replace(/\s+/g, '_');
+                    const uniqueName = `${timestamp}_${originalName}`;
+    
+                    const targetFile = path.join(uploadDir, uniqueName);
+                    const relativeImagePath = `uploads/${uniqueName}`;
+    
+                    const fileExtension = path.extname(mediaMainImage.name).toLowerCase();
+    
+                    if (!validExtensions.includes(fileExtension.substring(1))) {
+                        return reject(new Error('Only JPG, JPEG, PNG, and GIF files are allowed.'));
+                    }
+    
+                    mediaMainImage.mv(targetFile, (err) => {
+                        if (err) {
+                            return reject(new Error('Error uploading the main image.'));
+                        }
+    
+                        mainImagePath = relativeImagePath;
+                        resolve();
+                    });
+                } else {
+                    resolve();
+                }
+            });
+    
+            // Handle additional images
+            const uploadPromises = (mediaImages || []).map((mediaImage) => {
+                return new Promise((resolve, reject) => {
+                    const timestamp = Date.now();
+                    const originalName = mediaImage.name.replace(/\s+/g, '_');
+                    const uniqueName = `${timestamp}_${originalName}`;
+    
+                    const targetFile = path.join(uploadDir, uniqueName);
+                    const relativeImagePath = `uploads/${uniqueName}`;
+    
+                    const fileExtension = path.extname(mediaImage.name).toLowerCase();
+    
+                    if (!validExtensions.includes(fileExtension.substring(1))) {
+                        return reject(new Error('Only JPG, JPEG, PNG, and GIF files are allowed.'));
+                    }
+    
+                    mediaImage.mv(targetFile, (err) => {
+                        if (err) {
+                            return reject(new Error('Error uploading the file.'));
+                        }
+    
+                        imagePaths.push(relativeImagePath);
+                        resolve();
+                    });
+                });
+            });
+    
+            Promise.all([mainImagePromise, ...uploadPromises])
+                .then(() => {
+                    const query = `
+                    UPDATE dypx_campaign_data
+                    SET 
+                        campaign_title = ?, 
+                        campaign_type = ?, 
+                        campaign_desc = ?, 
+                        campaign_main_image = ?, 
+                        campaign_images = ?
+                    WHERE 
+                        campaign_id = ?
+                `;
+    
+                    const values = [
+                        mediaTitle,
+                        mediaType,
+                        mediaDescription,
+                        mainImagePath || null,
+                        JSON.stringify(imagePaths) || null,
+                        campaign_id
+                    ];
+    
+                    db.query(query, values, (err, result) => {
+                        if (err) return reject(err);
+                        resolve(result);
+                    });
+                })
+                .catch((err) => {
+                    console.error(err);
+                    return reject(err);
+                });
+        });
+    },
     
     
     addLobbyMedia: (mdId, mediaData, mediaImage) => {
@@ -527,6 +634,7 @@ getCamapaignDetailsModel: (mdId,page) => {
         const query = `SELECT * FROM dypx_campaign_data WHERE campaign_id = ?`;
         db.query(query, [mdId], (err, result) => {
             if (err) return reject(err);
+            console.log(result);
             resolve(result);
         });
     });
